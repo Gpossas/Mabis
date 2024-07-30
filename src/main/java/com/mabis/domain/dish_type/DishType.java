@@ -25,6 +25,6 @@ public class DishType
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(targetEntity = MenuItem.class)
+    @OneToMany(mappedBy = "dish_type", targetEntity = MenuItem.class)
     private List<MenuItem> menu_item;
 }

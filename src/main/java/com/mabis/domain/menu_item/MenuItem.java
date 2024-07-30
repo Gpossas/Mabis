@@ -34,5 +34,6 @@ public class MenuItem
     private String description;
 
     @ManyToOne(targetEntity = DishType.class)
+    @JoinColumn(name = "dish_type_id")
     private DishType dish_type;
 }
