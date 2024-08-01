@@ -30,7 +30,7 @@ public class MenuItem
     private float price;
 
     @Column
-    private String url_image;
+    private String image_url;
 
     @Column
     private String description;
