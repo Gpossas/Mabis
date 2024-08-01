@@ -25,7 +25,7 @@ public class CategoryController
     }
 
     @GetMapping
-    public ResponseEntity<List<Category>> get_all_categories()
+    public ResponseEntity<List<ResponseCategoryDTO>> get_all_categories()
     {
         return ResponseEntity.ok(category_service.get_all());
     }

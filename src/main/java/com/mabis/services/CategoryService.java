@@ -23,8 +23,8 @@ public class CategoryService
         return new ResponseCategoryDTO(category.getId(), category.getName());
     }
 
-    public List<Category> get_all()
+    public List<ResponseCategoryDTO> get_all()
     {
-        return category_repository.findAll();
+        return category_repository.findAllCategoriesSorted();
     }
 }
