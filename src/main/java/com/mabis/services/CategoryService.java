@@ -16,6 +16,6 @@ public class CategoryService
     {
         Category category = new Category();
         category.setName(category_dto.name());
-        return category_repository.save(category);
+        return category_repository.save(category); //TODO: don't show many-to-many field in json
     }
 }
