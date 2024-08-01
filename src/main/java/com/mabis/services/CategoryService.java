@@ -2,6 +2,7 @@ package com.mabis.services;
 
 import com.mabis.domain.category.Category;
 import com.mabis.domain.category.CreateCategoryDTO;
+import com.mabis.domain.category.ResponseCategoryDTO;
 import com.mabis.repositories.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,11 +15,12 @@ public class CategoryService
 {
     private final CategoryRepository category_repository;
 
-    public Category create_category(CreateCategoryDTO category_dto)
+    public ResponseCategoryDTO create_category(CreateCategoryDTO category_dto)
     {
         Category category = new Category();
         category.setName(category_dto.name());
-        return category_repository.save(category); //TODO: don't show many-to-many field in json
+        category = category_repository.save(category);
+        return new ResponseCategoryDTO(category.getId(), category.getName());
     }
 
     public List<Category> get_all()
