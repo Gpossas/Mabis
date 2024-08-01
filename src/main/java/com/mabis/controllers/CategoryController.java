@@ -1,6 +1,5 @@
 package com.mabis.controllers;
 
-import com.mabis.domain.category.Category;
 import com.mabis.domain.category.CreateCategoryDTO;
 import com.mabis.domain.category.ResponseCategoryDTO;
 import com.mabis.services.CategoryService;
