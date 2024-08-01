@@ -5,9 +5,13 @@ import com.mabis.domain.dish_type.DishType;
 import com.mabis.domain.dish_type.ResponseDishTypeDTO;
 import com.mabis.repositories.DishTypeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -26,5 +30,15 @@ public class DishTypeService
     public List<ResponseDishTypeDTO> get_all()
     {
         return dish_type_repository.findAllDishTypesSorted();
+    }
+
+    public DishType get_dish_type_by_id(UUID id)
+    {
+        Optional<DishType> dish_type = dish_type_repository.findById(id);
+        if (dish_type.isEmpty())
+        {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Dish Type not found");
+        }
+        return dish_type.get();
     }
 }
