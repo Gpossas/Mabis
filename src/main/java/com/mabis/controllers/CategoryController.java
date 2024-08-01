@@ -22,7 +22,7 @@ public class CategoryController
         return ResponseEntity.ok(category_service.create_category(category_dto));
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<List<Category>> get_all_categories()
     {
         return ResponseEntity.ok(category_service.get_all());
