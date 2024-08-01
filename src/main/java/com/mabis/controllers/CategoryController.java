@@ -5,10 +5,9 @@ import com.mabis.domain.category.CreateCategoryDTO;
 import com.mabis.services.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/categories")
@@ -21,5 +20,11 @@ public class CategoryController
     public ResponseEntity<Category> create_category( @RequestBody CreateCategoryDTO category_dto)
     {
         return ResponseEntity.ok(category_service.create_category(category_dto));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Category>> get_all_categories()
+    {
+        return ResponseEntity.ok(category_service.get_all());
     }
 }

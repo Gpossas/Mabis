@@ -6,6 +6,8 @@ import com.mabis.repositories.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CategoryService
@@ -17,5 +19,10 @@ public class CategoryService
         Category category = new Category();
         category.setName(category_dto.name());
         return category_repository.save(category); //TODO: don't show many-to-many field in json
+    }
+
+    public List<Category> get_all()
+    {
+        return category_repository.findAll();
     }
 }
