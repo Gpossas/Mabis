@@ -1,3 +1,5 @@
 package com.mabis.domain.dish_type;
 
-public record CreateDishTypeDTO(String name) {}
+import jakarta.validation.constraints.NotBlank;
+
+public record CreateDishTypeDTO(@NotBlank String name) {}

@@ -3,6 +3,7 @@ package com.mabis.controllers;
 import com.mabis.domain.category.CreateCategoryDTO;
 import com.mabis.domain.category.ResponseCategoryDTO;
 import com.mabis.services.CategoryService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class CategoryController
     private final CategoryService category_service;
 
     @PostMapping("/create")
-    public ResponseEntity<ResponseCategoryDTO> create_category(@RequestBody CreateCategoryDTO category_dto)
+    public ResponseEntity<ResponseCategoryDTO> create_category(@Valid @RequestBody CreateCategoryDTO category_dto)
     {
         return new ResponseEntity<>(category_service.create_category(category_dto), HttpStatus.CREATED);
     }
