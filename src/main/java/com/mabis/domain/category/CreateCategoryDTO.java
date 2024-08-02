@@ -1,3 +1,5 @@
 package com.mabis.domain.category;
 
-public record CreateCategoryDTO(String name) {}
+import jakarta.validation.constraints.NotBlank;
+
+public record CreateCategoryDTO(@NotBlank String name) {}
