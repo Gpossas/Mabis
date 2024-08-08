@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.io.IOException;
 
 
 @RestController
@@ -21,7 +20,8 @@ public class MenuItemController
     @PostMapping(value = "/create", consumes = "multipart/form-data")
     public ResponseEntity<ResponseMenuItemDTO> create_menu_item(
             @Valid @ModelAttribute CreateMenuItemDTO menu_item_dto
-    ) throws IOException {
+    )
+    {
         return new ResponseEntity<>(menu_item_service.create_menu_item(menu_item_dto), HttpStatus.CREATED);
     }
 }
