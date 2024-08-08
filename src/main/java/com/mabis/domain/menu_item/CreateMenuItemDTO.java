@@ -21,5 +21,5 @@ public record CreateMenuItemDTO(
    @NotNull
    UUID dish_type_id,
 
-   MultipartFile image_url
+   MultipartFile image
 ) {}
