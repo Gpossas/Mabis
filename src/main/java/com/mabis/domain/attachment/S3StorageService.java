@@ -2,6 +2,7 @@ package com.mabis.domain.attachment;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 
+@Component
 @RequiredArgsConstructor
 public class S3StorageService implements StorageService
 {
@@ -39,5 +41,11 @@ public class S3StorageService implements StorageService
 
         GetUrlRequest request = GetUrlRequest.builder().bucket(bucket_name).key(key).build();
         return s3.utilities().getUrl(request).toExternalForm();
+    }
+
+    @Override
+    public String get_service_name()
+    {
+        return "S3";
     }
 }
