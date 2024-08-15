@@ -18,7 +18,7 @@ import java.util.UUID;
 public class S3StorageService implements StorageService
 {
     @Value("${aws.s3.bucket_name}")
-    private final String bucket_name;
+    private String bucket_name;
     private final S3Client s3;
 
     @Override
