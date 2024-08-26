@@ -1,5 +1,3 @@
-create EXTENSION if not exists "pgcrypto";
-
 create table menu_items(
     id UUID default gen_random_uuid() primary key,
     name varchar(250) not null,
