@@ -17,7 +17,7 @@ class DishTypeRepositoryTest
     DishTypeRepository dish_type_repository;
 
     @Test
-    void findAllDishTypesSorted()
+    void find_all_dish_types_sorted()
     {
         DishType dish = new DishType();
         dish.setName("starter");
