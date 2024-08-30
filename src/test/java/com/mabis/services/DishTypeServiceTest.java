@@ -12,6 +12,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,5 +44,20 @@ class DishTypeServiceTest
         //assert
         Mockito.verify(dish_type_repository, Mockito.times(1)).save(Mockito.any());
         assertEquals("Starter", result.name());
+    }
+
+    @Test
+    void find_dish_by_id()
+    {
+        DishType dish_type_mock = new DishType();
+        dish_type_mock.setName("starter");
+        dish_type_mock.setId(UUID.randomUUID());
+
+        Mockito.when(dish_type_repository.findById(dish_type_mock.getId())).thenReturn(Optional.of(dish_type_mock));
+
+        DishType result = dish_type_service.get_dish_type_by_id(dish_type_mock.getId());
+
+        Mockito.verify(dish_type_repository, Mockito.times(1)).save(Mockito.any());
+        assertEquals("Starter", result.getName());
     }
 }
