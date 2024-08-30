@@ -3,6 +3,7 @@ package com.mabis.services;
 import com.mabis.domain.dish_type.CreateDishTypeDTO;
 import com.mabis.domain.dish_type.DishType;
 import com.mabis.domain.dish_type.ResponseDishTypeDTO;
+import com.mabis.exceptions.NotFound;
 import com.mabis.repositories.DishTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -11,11 +12,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.expression.spel.ast.NullLiteral;
-
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -60,5 +60,16 @@ class DishTypeServiceTest
 
         Mockito.verify(dish_type_repository, Mockito.times(1)).findById(Mockito.any());
         assertEquals("Starter", result.getName());
+    }
+
+    @Test
+    void throw_not_found_if_no_id()
+    {
+        UUID id = UUID.randomUUID();
+        Mockito.when(dish_type_repository.findById(id)).thenReturn(null);
+
+        assertThatThrownBy(() -> dish_type_service.get_dish_type_by_id(id))
+                .isInstanceOf(NotFound.class)
+                .hasMessage("Dish Type not found");
     }
 }
