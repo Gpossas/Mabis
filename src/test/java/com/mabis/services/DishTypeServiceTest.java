@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.expression.spel.ast.NullLiteral;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -57,7 +58,7 @@ class DishTypeServiceTest
 
         DishType result = dish_type_service.get_dish_type_by_id(dish_type_mock.getId());
 
-        Mockito.verify(dish_type_repository, Mockito.times(1)).save(Mockito.any());
+        Mockito.verify(dish_type_repository, Mockito.times(1)).findById(Mockito.any());
         assertEquals("Starter", result.getName());
     }
 }
