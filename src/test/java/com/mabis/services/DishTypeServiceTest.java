@@ -49,7 +49,7 @@ class DishTypeServiceTest
     void find_dish_by_id()
     {
         DishType dish_type_mock = new DishType();
-        dish_type_mock.setName("starter");
+        dish_type_mock.setName("Starter");
         dish_type_mock.setId(UUID.randomUUID());
 
         Mockito.when(dish_type_repository.findById(dish_type_mock.getId())).thenReturn(Optional.of(dish_type_mock));
