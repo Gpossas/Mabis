@@ -3,6 +3,7 @@ package com.mabis.services;
 import com.mabis.domain.dish_type.CreateDishTypeDTO;
 import com.mabis.domain.dish_type.DishType;
 import com.mabis.domain.dish_type.ResponseDishTypeDTO;
+import com.mabis.exceptions.DishTypeNotFoundException;
 import com.mabis.repositories.DishTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,8 @@ public class DishTypeService
     public ResponseDishTypeDTO create_dish_type(CreateDishTypeDTO dish_type_dto)
     {
         DishType dish_type = new DishType();
-        dish_type.setName(dish_type_dto.name());
+        String captalized_name = dish_type_dto.name().substring(0,1).toUpperCase() + dish_type_dto.name().substring(1);
+        dish_type.setName(captalized_name);
         dish_type = dish_type_repository.save(dish_type);
         return new ResponseDishTypeDTO(dish_type.getId(), dish_type.getName());
     }
@@ -37,7 +39,7 @@ public class DishTypeService
         Optional<DishType> dish_type = dish_type_repository.findById(id);
         if (dish_type.isEmpty())
         {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Dish Type not found");
+            throw new DishTypeNotFoundException();
         }
         return dish_type.get();
     }
