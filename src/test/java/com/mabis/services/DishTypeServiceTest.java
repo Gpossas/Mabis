@@ -3,9 +3,8 @@ package com.mabis.services;
 import com.mabis.domain.dish_type.CreateDishTypeDTO;
 import com.mabis.domain.dish_type.DishType;
 import com.mabis.domain.dish_type.ResponseDishTypeDTO;
-import com.mabis.exceptions.NotFound;
+import com.mabis.exceptions.DishTypeNotFoundException;
 import com.mabis.repositories.DishTypeRepository;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,27 +18,26 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-@RequiredArgsConstructor
 class DishTypeServiceTest
 {
     @Mock
-    private final DishTypeRepository dish_type_repository;
+    private DishTypeRepository dish_type_repository;
 
     @InjectMocks
-    private final DishTypeService dish_type_service;
+    private DishTypeService dish_type_service;
 
     @Test
     void create_dish_type_apply_uppercase()
     {
         // arrange
         DishType dish_type_mock = new DishType();
-        dish_type_mock.setName("starter");
+        dish_type_mock.setName("Starter");
 
         //mock behavior of the repository
-        Mockito.when(dish_type_repository.save(dish_type_mock)).thenReturn(dish_type_mock);
+        Mockito.when(dish_type_repository.save(Mockito.any(DishType.class))).thenReturn(dish_type_mock);
 
         // act
-        CreateDishTypeDTO dish_type_dto_mock = new CreateDishTypeDTO(dish_type_mock.getName());
+        CreateDishTypeDTO dish_type_dto_mock = new CreateDishTypeDTO("starter");
         ResponseDishTypeDTO result = dish_type_service.create_dish_type(dish_type_dto_mock);
 
         //assert
@@ -69,7 +67,7 @@ class DishTypeServiceTest
         Mockito.when(dish_type_repository.findById(id)).thenReturn(null);
 
         assertThatThrownBy(() -> dish_type_service.get_dish_type_by_id(id))
-                .isInstanceOf(NotFound.class)
+                .isInstanceOf(DishTypeNotFoundException.class)
                 .hasMessage("Dish Type not found");
     }
 }
