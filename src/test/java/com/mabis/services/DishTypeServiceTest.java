@@ -64,10 +64,10 @@ class DishTypeServiceTest
     void throw_not_found_if_no_id()
     {
         UUID id = UUID.randomUUID();
-        Mockito.when(dish_type_repository.findById(id)).thenReturn(null);
+        Mockito.when(dish_type_repository.findById(id)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> dish_type_service.get_dish_type_by_id(id))
                 .isInstanceOf(DishTypeNotFoundException.class)
-                .hasMessage("Dish Type not found");
+                .hasMessage("Dish type not found");
     }
 }
