@@ -9,6 +9,7 @@ import java.util.UUID;
 
 public record CreateMenuItemDTO(
    @NotBlank()
+   @Max(250)
    String name,
 
    @NotNull
