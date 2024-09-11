@@ -43,4 +43,14 @@ class DishTypeControllerTest
             .andExpect(MockMvcResultMatchers.status().isCreated())
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
     }
+
+    @Test
+    void throw_400_missing_dto_parameter_payload() throws Exception
+    {
+        mvc.perform(
+            MockMvcRequestBuilders.post("/dish-types/create")
+                .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
 }
