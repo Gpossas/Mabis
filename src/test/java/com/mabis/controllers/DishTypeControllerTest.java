@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -52,5 +51,19 @@ class DishTypeControllerTest
                 .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    void throw_400_invalid_dto_parameters() throws Exception
+    {
+        String payload = new ObjectMapper().writeValueAsString(
+                new CreateDishTypeDTO("name_with_more_than_30_characters_long_is_not_allowed"));
+
+        mvc.perform(
+            MockMvcRequestBuilders.post("/dish-types/create")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(payload)
+        )
+        .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 }
