@@ -22,7 +22,7 @@ public class MenuItemService
     private final StorageServiceFactory storage_service_factory;
     private final ApplicationContext context;
 
-    public ResponseMenuItemDTO create_menu_item(CreateMenuItemDTO menu_item_dto) throws Exception
+    public ResponseMenuItemDTO create_menu_item(CreateMenuItemDTO menu_item_dto)
     {
         MenuItem menu_item = new MenuItem();
         menu_item.setName(menu_item_dto.name());

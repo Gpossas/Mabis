@@ -1,5 +1,6 @@
 package com.mabis.domain.attachment;
 
+import com.mabis.exceptions.InvalidStorageServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,12 +20,12 @@ public class StorageServiceFactory
         services.forEach( service -> services_map.put(service.get_service_name(), service) );
     }
 
-    public StorageService get_service(String service) throws Exception
+    public StorageService get_service(String service)
     {
         StorageService storage_service = services_map.get(service);
         if (storage_service == null)
         {
-            throw new Exception("Invalid storage service");
+            throw new InvalidStorageServiceException();
         }
         return storage_service;
     }
