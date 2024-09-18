@@ -46,4 +46,16 @@ public class MenuItem
             inverseJoinColumns = { @JoinColumn(name = "category_id") }
     )
     private Set<Category> categories;
+
+    public MenuItem(CreateMenuItemDTO menuItemDto)
+    {
+        this.name = this.capitalize(menuItemDto.name());
+        this.price = menuItemDto.price();
+        this.description = menuItemDto.description() != null ? this.capitalize(menuItemDto.description()) : null;
+    }
+
+    private String capitalize(String string)
+    {
+        return string.substring(0, 1).toUpperCase() + string.substring(1);
+    }
 }
