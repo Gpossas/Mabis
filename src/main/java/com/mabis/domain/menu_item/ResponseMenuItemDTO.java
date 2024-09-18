@@ -8,5 +8,16 @@ public record ResponseMenuItemDTO(
         Float price,
         String description,
         String image_url
-) {}
+) {
+    public static ResponseMenuItemDTO from_menu_item(MenuItem menu_item)
+    {
+        return new ResponseMenuItemDTO(
+                menu_item.getId(),
+                menu_item.getName(),
+                menu_item.getPrice(),
+                menu_item.getDescription(),
+                menu_item.getImage_url()
+        );
+    }
+}
 //TODO: include relationships: dish_type and category
