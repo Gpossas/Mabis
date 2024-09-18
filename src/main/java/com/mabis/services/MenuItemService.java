@@ -24,10 +24,7 @@ public class MenuItemService
 
     public ResponseMenuItemDTO create_menu_item(CreateMenuItemDTO menu_item_dto)
     {
-        MenuItem menu_item = new MenuItem();
-        menu_item.setName(menu_item_dto.name());
-        menu_item.setPrice(menu_item_dto.price());
-        menu_item.setDescription(menu_item_dto.description());
+        MenuItem menu_item = new MenuItem(menu_item_dto);
 
         DishType dish_type = dish_type_service.get_dish_type_by_id(menu_item_dto.dish_type_id());
         menu_item.setDish_type(dish_type);
@@ -42,12 +39,6 @@ public class MenuItemService
 
         menu_item = menu_item_repository.save(menu_item);
 
-        return new ResponseMenuItemDTO(
-                menu_item.getId(),
-                menu_item.getName(),
-                menu_item.getPrice(),
-                menu_item.getDescription(),
-                menu_item.getImage_url()
-        );
+        return ResponseMenuItemDTO.from_menu_item(menu_item);
     }
 }
