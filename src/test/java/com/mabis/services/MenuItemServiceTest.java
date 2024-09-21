@@ -77,4 +77,28 @@ class MenuItemServiceTest
         Mockito.verify(attachment_service, Mockito.never()).upload(Mockito.any());
         Mockito.verify(menu_item, Mockito.never()).setImage_url(Mockito.any());
     }
+
+    @Test
+    void test_upload_image()
+    {
+        AttachmentService attachment_service = Mockito.mock(AttachmentService.class);
+        CreateMenuItemDTO menu_item_dto = new CreateMenuItemDTO(
+                "abc", 12F, null, UUID.randomUUID(), Mockito.mock(MultipartFile.class));
+        MenuItem menu_item = Mockito.spy(new MenuItem(menu_item_dto));
+        StorageService storage_service = Mockito.mock(StorageService.class);
+        String url = "random_url";
+
+        Mockito.when(storage_service_factory.get_service(Mockito.any())).thenReturn(storage_service);
+        Mockito.when(context.getBean(AttachmentService.class, storage_service)).thenReturn(attachment_service);
+        Mockito.when(attachment_service.upload(menu_item_dto.image())).thenReturn(url);
+        Mockito.when(menu_item_repository.save(Mockito.any(MenuItem.class))).thenReturn(new MenuItem());
+
+        menu_item_service.create_menu_item(menu_item_dto);
+
+        Mockito.verify(storage_service_factory, Mockito.times(1)).get_service(Mockito.any());
+        Mockito.verify(context, Mockito.times(1)).getBean(AttachmentService.class, storage_service);
+        Mockito.verify(attachment_service, Mockito.times(1)).upload(Mockito.any());
+        Mockito.verify(menu_item, Mockito.times(1)).setImage_url(url);
+    }
+
 }
