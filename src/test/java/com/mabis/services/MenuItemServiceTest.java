@@ -1,6 +1,8 @@
 package com.mabis.services;
 
 import com.mabis.domain.attachment.AttachmentService;
+import com.mabis.domain.attachment.S3StorageService;
+import com.mabis.domain.attachment.StorageService;
 import com.mabis.domain.attachment.StorageServiceFactory;
 import com.mabis.domain.dish_type.DishType;
 import com.mabis.domain.menu_item.CreateMenuItemDTO;
@@ -63,6 +65,12 @@ class MenuItemServiceTest
     {
         AttachmentService attachment_service = Mockito.mock(AttachmentService.class);
         MenuItem menu_item = Mockito.mock(MenuItem.class);
+        CreateMenuItemDTO menu_item_dto = new CreateMenuItemDTO(
+                "abc", 12F, null, null, null);
+
+        Mockito.when(menu_item_repository.save(Mockito.any(MenuItem.class))).thenReturn(new MenuItem());
+
+        menu_item_service.create_menu_item(menu_item_dto);
 
         Mockito.verify(storage_service_factory, Mockito.never()).get_service(Mockito.any());
         Mockito.verify(context, Mockito.never()).getBean(AttachmentService.class);
