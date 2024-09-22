@@ -64,6 +64,8 @@ class DishTypeControllerTest
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(payload)
         )
-        .andExpect(MockMvcResultMatchers.status().isBadRequest());
+        .andExpect(MockMvcResultMatchers.status().isBadRequest())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].field").value("name"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message").value("size must be between 3 and 30"));
     }
 }
