@@ -18,9 +18,7 @@ public class MenuItemController
     private final MenuItemService menu_item_service;
 
     @PostMapping(value = "/create", consumes = "multipart/form-data")
-    public ResponseEntity<ResponseMenuItemDTO> create_menu_item(
-            @Valid @ModelAttribute CreateMenuItemDTO menu_item_dto
-    ) throws Exception
+    public ResponseEntity<ResponseMenuItemDTO> create_menu_item(@Valid @ModelAttribute CreateMenuItemDTO menu_item_dto)
     {
         return new ResponseEntity<>(menu_item_service.create_menu_item(menu_item_dto), HttpStatus.CREATED);
     }
