@@ -4,8 +4,12 @@ import com.mabis.exceptions.DishTypeNotFoundException;
 import com.mabis.exceptions.InvalidStorageServiceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.util.List;
 
 @ControllerAdvice
 public class GlobalExceptionHandler
@@ -21,6 +25,13 @@ public class GlobalExceptionHandler
     private ResponseEntity<ErrorResponse> invalid_storage_service_exception_handler(InvalidStorageServiceException exception)
     {
         ErrorResponse response = new ErrorResponse(HttpStatus.BAD_REQUEST, exception.getMessage());
+        return new ResponseEntity<>(response, response.getHttp_status());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    private ResponseEntity<MultipleErrorsResponse> invalid_method_argument_exception(MethodArgumentNotValidException exception)
+    {
+        MultipleErrorsResponse response = new MultipleErrorsResponse(HttpStatus.BAD_REQUEST, exception.getFieldErrors());
         return new ResponseEntity<>(response, response.getHttp_status());
     }
 }
