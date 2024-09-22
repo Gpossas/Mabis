@@ -11,6 +11,7 @@ import com.mabis.domain.menu_item.ResponseMenuItemDTO;
 import com.mabis.repositories.MenuItemRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -84,7 +85,7 @@ class MenuItemServiceTest
         AttachmentService attachment_service = Mockito.mock(AttachmentService.class);
         CreateMenuItemDTO menu_item_dto = new CreateMenuItemDTO(
                 "abc", 12F, null, UUID.randomUUID(), Mockito.mock(MultipartFile.class));
-        MenuItem menu_item = Mockito.spy(new MenuItem(menu_item_dto));
+        ArgumentCaptor<MenuItem> men_item_argument_captor = ArgumentCaptor.forClass(MenuItem.class);
         StorageService storage_service = Mockito.mock(StorageService.class);
         String url = "random_url";
 
@@ -98,7 +99,8 @@ class MenuItemServiceTest
         Mockito.verify(storage_service_factory, Mockito.times(1)).get_service(Mockito.any());
         Mockito.verify(context, Mockito.times(1)).getBean(AttachmentService.class, storage_service);
         Mockito.verify(attachment_service, Mockito.times(1)).upload(Mockito.any());
-        Mockito.verify(menu_item, Mockito.times(1)).setImage_url(url);
+        Mockito.verify(menu_item_repository).save(men_item_argument_captor.capture());
+        assertEquals(url, men_item_argument_captor.getValue().getImage_url());
     }
 
 }
