@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public record CreateMenuItemDTO(
    @NotBlank()
-   @Size(max = 250)
+   @Size(min = 3, max = 250)
    String name,
 
    @NotNull
