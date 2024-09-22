@@ -12,7 +12,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -31,14 +30,8 @@ class MenuItemControllerTest
     @Test
     void test_missing_fields_dto_creating_menu_item() throws Exception
     {
-        CreateMenuItemDTO dto = Mockito.mock(CreateMenuItemDTO.class);
-        String payload = new ObjectMapper().writeValueAsString(dto);
-
-        MultipleErrorsResponse expected_error_response = new MultipleErrorsResponse(HttpStatus.BAD_REQUEST, new ArrayList<>());
-
         mvc.perform(MockMvcRequestBuilders.post("/menu-items/create")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
-                .content(payload)
         ).andExpect(MockMvcResultMatchers.status().isBadRequest())
          .andExpect(MockMvcResultMatchers.jsonPath("$.http_status").value("BAD_REQUEST"))
          .andExpect(MockMvcResultMatchers.jsonPath("$.errors[?(@.message == 'must not be null')]").exists())
