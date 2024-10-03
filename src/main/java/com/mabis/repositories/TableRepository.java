@@ -12,7 +12,6 @@ import java.util.UUID;
 public interface TableRepository extends JpaRepository<RestaurantTable, UUID>
 {
 
-    // TODO:you may need to create a response just for the number, don't know if just using max is enough
     @Query("SELECT MAX(t.number) FROM RestaurantTable t")
     Optional<Integer> get_max_table_number();
 }
