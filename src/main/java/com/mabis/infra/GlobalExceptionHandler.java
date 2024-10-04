@@ -1,5 +1,6 @@
 package com.mabis.infra;
 
+import com.mabis.exceptions.ActiveTableException;
 import com.mabis.exceptions.DishTypeNotFoundException;
 import com.mabis.exceptions.InvalidStorageServiceException;
 import com.mabis.exceptions.TableNotFoundException;
@@ -38,6 +39,13 @@ public class GlobalExceptionHandler
     private ResponseEntity<ErrorResponse> table_not_found_exception_handler(TableNotFoundException exception)
     {
         ErrorResponse response = new ErrorResponse(HttpStatus.NOT_FOUND, exception.getMessage());
+        return new ResponseEntity<>(response, response.getHttp_status());
+    }
+
+    @ExceptionHandler(ActiveTableException.class)
+    private ResponseEntity<ErrorResponse> modify_active_table_exception_handler(ActiveTableException exception)
+    {
+        ErrorResponse response = new ErrorResponse(HttpStatus.CONFLICT, exception.getMessage());
         return new ResponseEntity<>(response, response.getHttp_status());
     }
 }
