@@ -5,10 +5,7 @@ import com.mabis.services.TableService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/tables")
@@ -24,5 +21,12 @@ public class TableController
         return new ResponseEntity<>(
                 "Created " + dto.tables_quantity() + " tables with " + dto.capacity() + " chairs" ,
                 HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/normalize_table_numbers")
+    public ResponseEntity<String> normalize_table_numbers()
+    {
+        table_service.normalize_table_numbers_sequence();
+        return new ResponseEntity<>("Normalized all table numbers", HttpStatus.OK);
     }
 }
