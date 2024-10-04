@@ -2,6 +2,7 @@ package com.mabis.infra;
 
 import com.mabis.exceptions.DishTypeNotFoundException;
 import com.mabis.exceptions.InvalidStorageServiceException;
+import com.mabis.exceptions.TableNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -30,6 +31,13 @@ public class GlobalExceptionHandler
     private ResponseEntity<MultipleErrorsResponse> invalid_method_argument_exception(MethodArgumentNotValidException exception)
     {
         MultipleErrorsResponse response = new MultipleErrorsResponse(HttpStatus.BAD_REQUEST, exception.getFieldErrors());
+        return new ResponseEntity<>(response, response.getHttp_status());
+    }
+
+    @ExceptionHandler(TableNotFoundException.class)
+    private ResponseEntity<ErrorResponse> table_not_found_exception_handler(TableNotFoundException exception)
+    {
+        ErrorResponse response = new ErrorResponse(HttpStatus.NOT_FOUND, exception.getMessage());
         return new ResponseEntity<>(response, response.getHttp_status());
     }
 }
