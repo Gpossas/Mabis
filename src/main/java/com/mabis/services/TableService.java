@@ -2,6 +2,7 @@ package com.mabis.services;
 
 import com.mabis.domain.restaurant_table.CreateTablesDTO;
 import com.mabis.domain.restaurant_table.RestaurantTable;
+import com.mabis.exceptions.TableNotFoundException;
 import com.mabis.repositories.TableRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -44,5 +46,12 @@ public class TableService
     public List<RestaurantTable> get_all_tables()
     {
         return table_repository.findAll();
+    }
+
+    public void delete_table_by_id(UUID id)
+    {
+        Optional<RestaurantTable> table = table_repository.findById(id);
+        table.orElseThrow(TableNotFoundException::new);
+        table_repository.deleteById(id);
     }
 }

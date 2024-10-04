@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.Console;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/tables")
@@ -37,5 +39,12 @@ public class TableController
     public ResponseEntity<List<RestaurantTable>> get_all_tables()
     {
         return new ResponseEntity<>(table_service.get_all_tables(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void delete_table_by_id(@PathVariable UUID id)
+    {
+        table_service.delete_table_by_id(id);
     }
 }
