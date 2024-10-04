@@ -1,22 +1,29 @@
 package com.mabis.services;
 
+import com.google.zxing.WriterException;
+import com.mabis.domain.attachment.AttachmentService;
+import com.mabis.domain.attachment.StorageService;
+import com.mabis.domain.attachment.StorageServiceFactory;
 import com.mabis.domain.restaurant_table.CreateTablesDTO;
 import com.mabis.domain.restaurant_table.RestaurantTable;
+import com.mabis.exceptions.ActiveTableException;
 import com.mabis.exceptions.TableNotFoundException;
 import com.mabis.repositories.TableRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.awt.image.BufferedImage;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class TableService
 {
     private final TableRepository table_repository;
+    private final QRCodeService qr_code_service;
+    private final StorageServiceFactory storage_factory;
+    private final ApplicationContext context;
 
     public void create_tables(CreateTablesDTO dto)
     {
@@ -59,4 +66,27 @@ public class TableService
     {
         table_repository.deleteAll();
     }
+
+    public void table_checkin() throws WriterException {
+        RestaurantTable table = table_repository.findById().orElseThrow(TableNotFoundException::new);
+
+        if (table.getStatus().equals(RestaurantTable.table_status.ACTIVE.getStatus()))
+        {
+            throw new ActiveTableException();
+        }
+
+        String token = String.valueOf(table.getNumber()) + UUID.randomUUID();
+        String url = "http://localhost:8080/tables/checkin?token=" + token;
+
+        BufferedImage qr_code_image = qr_code_service.generate_qr_code_image(url);
+
+        StorageService storage_service = storage_factory.get_service("S3");
+        AttachmentService attachment_service = context.getBean(AttachmentService.class, storage_service);
+        attachment_service.upload(qr_code_image);
+
+
+        table.setStatus("active");
+
+    }
+
 }
