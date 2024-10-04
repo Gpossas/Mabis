@@ -3,6 +3,7 @@ package com.mabis.controllers;
 import com.mabis.domain.restaurant_table.CreateTablesDTO;
 import com.mabis.domain.restaurant_table.RestaurantTable;
 import com.mabis.services.TableService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class TableController
     private final TableService table_service;
 
     @PostMapping("/create_tables")
-    public ResponseEntity<String> create_tables(@RequestBody CreateTablesDTO dto)
+    public ResponseEntity<String> create_tables(@Valid @RequestBody CreateTablesDTO dto)
     {
         table_service.create_tables(dto);
         return new ResponseEntity<>(
