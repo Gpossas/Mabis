@@ -40,4 +40,9 @@ public class TableService
 
         table_repository.saveAll(tables);
     }
+
+    public List<RestaurantTable> get_all_tables()
+    {
+        return table_repository.findAll();
+    }
 }
