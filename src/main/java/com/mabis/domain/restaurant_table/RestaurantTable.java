@@ -2,10 +2,7 @@ package com.mabis.domain.restaurant_table;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -17,6 +14,16 @@ import java.util.UUID;
 @NoArgsConstructor
 public class RestaurantTable
 {
+    @Getter
+    @AllArgsConstructor
+    public enum table_status
+    {
+        ACTIVE("active"),
+        INACTIVE("inactive"),
+        RESERVED("reserved");
+        private final String status;
+    }
+
     @Id
     @GeneratedValue
     private UUID id;
@@ -31,7 +38,7 @@ public class RestaurantTable
     private String qr_code_url;
 
     @Column(nullable = false)
-    private String status = "inactive";
+    private String status = table_status.INACTIVE.getStatus();
 
     public RestaurantTable(int number, int quantity)
     {
