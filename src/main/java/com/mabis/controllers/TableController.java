@@ -46,4 +46,11 @@ public class TableController
     {
         table_service.delete_table_by_id(id);
     }
+
+    @DeleteMapping("/delete/all")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void delete_all_tables()
+    {
+        table_service.delete_all_tables();
+    }
 }

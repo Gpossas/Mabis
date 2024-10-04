@@ -54,4 +54,9 @@ public class TableService
         table.orElseThrow(TableNotFoundException::new);
         table_repository.deleteById(id);
     }
+
+    public void delete_all_tables()
+    {
+        table_repository.deleteAll();
+    }
 }
