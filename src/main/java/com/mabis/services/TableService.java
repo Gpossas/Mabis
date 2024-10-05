@@ -78,10 +78,12 @@ public class TableService
         String token = String.valueOf(table.getNumber()) + UUID.randomUUID();
         String url = "http://localhost:8080/tables/checkin?token=" + token;
 
+        //TODO: Decouple third party type from code
         BufferedImage qr_code_image = qr_code_service.generate_qr_code_image(url);
 
         StorageService storage_service = storage_factory.get_service("S3");
         AttachmentService attachment_service = context.getBean(AttachmentService.class, storage_service);
+        // TODO: convert BufferedImage into MultipartFile
         attachment_service.upload(qr_code_image);
 
 
