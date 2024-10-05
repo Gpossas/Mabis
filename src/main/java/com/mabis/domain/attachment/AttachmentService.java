@@ -15,9 +15,8 @@ public class AttachmentService
         this.storage_service = storage_service;
     }
 
-    public String upload(MultipartFile file)
+    public String upload(Attachment attachment)
     {
-        System.out.println("Scanning for viruses... Secure!");
-        return this.storage_service.upload(file);
+        return this.storage_service.upload(attachment);
     }
 }

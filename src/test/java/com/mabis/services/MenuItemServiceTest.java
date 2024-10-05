@@ -1,9 +1,6 @@
 package com.mabis.services;
 
-import com.mabis.domain.attachment.AttachmentService;
-import com.mabis.domain.attachment.S3StorageService;
-import com.mabis.domain.attachment.StorageService;
-import com.mabis.domain.attachment.StorageServiceFactory;
+import com.mabis.domain.attachment.*;
 import com.mabis.domain.dish_type.DishType;
 import com.mabis.domain.menu_item.CreateMenuItemDTO;
 import com.mabis.domain.menu_item.MenuItem;
@@ -19,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -91,7 +89,7 @@ class MenuItemServiceTest
 
         Mockito.when(storage_service_factory.get_service(Mockito.any())).thenReturn(storage_service);
         Mockito.when(context.getBean(AttachmentService.class, storage_service)).thenReturn(attachment_service);
-        Mockito.when(attachment_service.upload(menu_item_dto.image())).thenReturn(url);
+        Mockito.when(attachment_service.upload(Mockito.any(MultipartAttachment.class))).thenReturn(url);
         Mockito.when(menu_item_repository.save(Mockito.any(MenuItem.class))).thenReturn(new MenuItem());
 
         menu_item_service.create_menu_item(menu_item_dto);
