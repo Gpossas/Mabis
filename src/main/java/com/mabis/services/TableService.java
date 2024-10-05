@@ -1,19 +1,18 @@
 package com.mabis.services;
 
 import com.google.zxing.WriterException;
-import com.mabis.domain.attachment.AttachmentService;
-import com.mabis.domain.attachment.StorageService;
-import com.mabis.domain.attachment.StorageServiceFactory;
+import com.mabis.domain.attachment.*;
 import com.mabis.domain.restaurant_table.CreateTablesDTO;
 import com.mabis.domain.restaurant_table.RestaurantTable;
 import com.mabis.exceptions.ActiveTableException;
 import com.mabis.exceptions.TableNotFoundException;
 import com.mabis.repositories.TableRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
-import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -24,6 +23,8 @@ public class TableService
     private final QRCodeService qr_code_service;
     private final StorageServiceFactory storage_factory;
     private final ApplicationContext context;
+    @Value("${table.receive_token.url}")
+    private String table_token_url;
 
     public void create_tables(CreateTablesDTO dto)
     {
@@ -67,8 +68,8 @@ public class TableService
         table_repository.deleteAll();
     }
 
-    public void table_checkin() throws WriterException {
-        RestaurantTable table = table_repository.findById().orElseThrow(TableNotFoundException::new);
+    public String table_checkin(UUID id) throws WriterException, IOException {
+        RestaurantTable table = table_repository.findById(id).orElseThrow(TableNotFoundException::new);
 
         if (table.getStatus().equals(RestaurantTable.table_status.ACTIVE.getStatus()))
         {
@@ -76,19 +77,19 @@ public class TableService
         }
 
         String token = String.valueOf(table.getNumber()) + UUID.randomUUID();
-        String url = "http://localhost:8080/tables/checkin?token=" + token;
 
-        //TODO: Decouple third party type from code
-        BufferedImage qr_code_image = qr_code_service.generate_qr_code_image(url);
+        byte[] qr_code_bytes = qr_code_service.generate_qr_code(table_token_url + token);
+        Attachment qr_code = new QRCodeAttachment(qr_code_bytes);
 
         StorageService storage_service = storage_factory.get_service("S3");
         AttachmentService attachment_service = context.getBean(AttachmentService.class, storage_service);
-        // TODO: convert BufferedImage into MultipartFile
-        attachment_service.upload(qr_code_image);
-
+        String image_url = attachment_service.upload(qr_code);
 
         table.setStatus("active");
+        table.setQr_code_url(image_url);
+        table_repository.save(table);
 
+        return table.getQr_code_url();
     }
 
 }
