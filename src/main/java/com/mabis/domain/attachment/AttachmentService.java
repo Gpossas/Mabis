@@ -2,7 +2,6 @@ package com.mabis.domain.attachment;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 @Scope(value = "prototype")
 @Component

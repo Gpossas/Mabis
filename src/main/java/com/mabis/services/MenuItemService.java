@@ -13,8 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-
 
 @Service
 @RequiredArgsConstructor
