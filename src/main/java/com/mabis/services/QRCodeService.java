@@ -7,17 +7,19 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import org.springframework.stereotype.Service;
 
-import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 @Service
 public class QRCodeService
 {
-    public BufferedImage generate_qr_code_image(String barcodeText) throws WriterException
-    {
+    public byte[] generate_qr_code(String barcodeText) throws WriterException, IOException {
         QRCodeWriter barcodeWriter = new QRCodeWriter();
-        BitMatrix bitMatrix =
+        BitMatrix bit_matrix =
                 barcodeWriter.encode(barcodeText, BarcodeFormat.QR_CODE, 200, 200);
 
-        return MatrixToImageWriter.toBufferedImage(bitMatrix);
+        ByteArrayOutputStream byte_array = new ByteArrayOutputStream();
+        MatrixToImageWriter.writeToStream(bit_matrix, "PNG", byte_array);
+        return byte_array.toByteArray();
     }
 }
