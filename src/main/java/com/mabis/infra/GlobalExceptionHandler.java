@@ -1,14 +1,13 @@
 package com.mabis.infra;
 
-import com.mabis.exceptions.ActiveTableException;
-import com.mabis.exceptions.DishTypeNotFoundException;
-import com.mabis.exceptions.InvalidStorageServiceException;
-import com.mabis.exceptions.TableNotFoundException;
+import com.mabis.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.io.IOException;
 
 
 @ControllerAdvice
@@ -46,6 +45,13 @@ public class GlobalExceptionHandler
     private ResponseEntity<ErrorResponse> modify_active_table_exception_handler(ActiveTableException exception)
     {
         ErrorResponse response = new ErrorResponse(HttpStatus.CONFLICT, exception.getMessage());
+        return new ResponseEntity<>(response, response.getHttp_status());
+    }
+
+    @ExceptionHandler(MultipartAttachmentException.class)
+    private ResponseEntity<ErrorResponse> get_bytes_exception_handler(MultipartAttachmentException exception)
+    {
+        ErrorResponse response = new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, exception.getMessage());
         return new ResponseEntity<>(response, response.getHttp_status());
     }
 }
