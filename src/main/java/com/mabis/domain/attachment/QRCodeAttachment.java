@@ -15,7 +15,7 @@ public class QRCodeAttachment implements Attachment
     @Override
     public String get_content_type()
     {
-        return "PNG";
+        return "image/png";
     }
 
     @Override
