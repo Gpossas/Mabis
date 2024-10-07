@@ -68,7 +68,8 @@ public class TableService
         table_repository.deleteAll();
     }
 
-    public String table_checkin(UUID id) throws WriterException, IOException {
+    public String table_checkin(UUID id)
+    {
         RestaurantTable table = table_repository.findById(id).orElseThrow(TableNotFoundException::new);
 
         if (table.getStatus().equals(RestaurantTable.table_status.ACTIVE.getStatus()))
