@@ -1,5 +1,6 @@
 package com.mabis.controllers;
 
+import com.google.zxing.WriterException;
 import com.mabis.domain.restaurant_table.CreateTablesDTO;
 import com.mabis.domain.restaurant_table.RestaurantTable;
 import com.mabis.services.TableService;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -53,5 +55,11 @@ public class TableController
     public void delete_all_tables()
     {
         table_service.delete_all_tables();
+    }
+
+    @PatchMapping("checkin/{id}")
+    public ResponseEntity<String> table_checkin(@PathVariable UUID id)
+    {
+        return new ResponseEntity<>(table_service.table_checkin(id), HttpStatus.OK);
     }
 }
