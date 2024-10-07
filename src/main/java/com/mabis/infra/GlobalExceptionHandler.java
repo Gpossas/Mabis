@@ -52,4 +52,18 @@ public class GlobalExceptionHandler
         ErrorResponse response = new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, exception.getMessage());
         return new ResponseEntity<>(response, response.getHttp_status());
     }
+
+    @ExceptionHandler(QRCodeEncodeException.class)
+    private ResponseEntity<ErrorResponse> qrcode_encode_exception_handler(QRCodeEncodeException exception)
+    {
+        ErrorResponse response = new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, exception.getMessage());
+        return new ResponseEntity<>(response, response.getHttp_status());
+    }
+
+    @ExceptionHandler(QRCodeToBytesException.class)
+    private ResponseEntity<ErrorResponse> qrcode_to_bytes_exception_handler(QRCodeToBytesException exception)
+    {
+        ErrorResponse response = new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, exception.getMessage());
+        return new ResponseEntity<>(response, response.getHttp_status());
+    }
 }
