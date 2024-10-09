@@ -37,6 +37,9 @@ public class RestaurantTable
     @Column
     private String qr_code_url;
 
+    @Column
+    private String token;
+
     @Column(nullable = false)
     private String status = table_status.INACTIVE.getStatus();
 
