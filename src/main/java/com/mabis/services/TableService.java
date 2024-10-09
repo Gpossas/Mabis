@@ -84,7 +84,7 @@ public class TableService
         AttachmentService attachment_service = context.getBean(AttachmentService.class, storage_service);
         String image_url = attachment_service.upload(qr_code);
 
-        table.setStatus("active");
+        table.setStatus(RestaurantTable.table_status.ACTIVE.getStatus());
         table.setQr_code_url(image_url);
         table_repository.save(table);
 
