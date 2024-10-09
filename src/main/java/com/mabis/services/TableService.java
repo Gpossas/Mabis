@@ -4,6 +4,7 @@ import com.mabis.domain.attachment.*;
 import com.mabis.domain.restaurant_table.CreateTablesDTO;
 import com.mabis.domain.restaurant_table.RestaurantTable;
 import com.mabis.exceptions.ActiveTableException;
+import com.mabis.exceptions.NotActiveTableException;
 import com.mabis.exceptions.TableNotFoundException;
 import com.mabis.repositories.TableRepository;
 import lombok.RequiredArgsConstructor;
@@ -78,7 +79,7 @@ public class TableService
         String token = String.valueOf(table.getNumber()) + UUID.randomUUID();
 
         byte[] qr_code_bytes = qr_code_service.generate_qr_code(table_token_url + token);
-        Attachment qr_code = new QRCodeAttachment(qr_code_bytes);
+        Attachment qr_code = new QRCodeAttachment(token, qr_code_bytes);
 
         StorageService storage_service = storage_factory.get_service("S3");
         AttachmentService attachment_service = context.getBean(AttachmentService.class, storage_service);
@@ -86,9 +87,9 @@ public class TableService
 
         table.setStatus(RestaurantTable.table_status.ACTIVE.getStatus());
         table.setQr_code_url(image_url);
+        table.setToken(token);
         table_repository.save(table);
 
         return table.getQr_code_url();
     }
-
 }
