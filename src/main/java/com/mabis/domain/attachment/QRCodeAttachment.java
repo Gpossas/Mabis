@@ -1,6 +1,5 @@
 package com.mabis.domain.attachment;
 
-import java.util.UUID;
 
 public class QRCodeAttachment implements Attachment
 {
