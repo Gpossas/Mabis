@@ -66,4 +66,11 @@ public class GlobalExceptionHandler
         ErrorResponse response = new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, exception.getMessage());
         return new ResponseEntity<>(response, response.getHttp_status());
     }
+
+    @ExceptionHandler(NotActiveTableException.class)
+    private ResponseEntity<ErrorResponse> table_not_active_exception_handler(NotActiveTableException exception)
+    {
+        ErrorResponse response = new ErrorResponse(HttpStatus.CONFLICT, exception.getMessage());
+        return new ResponseEntity<>(response, response.getHttp_status());
+    }
 }
