@@ -92,4 +92,23 @@ public class TableService
 
         return table.getQr_code_url();
     }
+
+    public void table_checkout(UUID id)
+    {
+        RestaurantTable table = table_repository.findById(id).orElseThrow(TableNotFoundException::new);
+
+        if (!table.getStatus().equals(RestaurantTable.table_status.ACTIVE.getStatus()))
+        {
+            throw new NotActiveTableException();
+        }
+
+        StorageService storage_service = storage_factory.get_service("S3");
+        AttachmentService attachment_service = context.getBean(AttachmentService.class, storage_service);
+        attachment_service.delete(table.getToken());
+
+        table.setQr_code_url(null);
+        table.setToken(null);
+        table.setStatus(RestaurantTable.table_status.INACTIVE.getStatus());
+        table_repository.save(table);
+    }
 }

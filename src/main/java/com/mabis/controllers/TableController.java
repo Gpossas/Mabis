@@ -60,4 +60,12 @@ public class TableController
     {
         return new ResponseEntity<>(table_service.table_checkin(id), HttpStatus.OK);
     }
+
+    @PatchMapping("checkout/{id}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public ResponseEntity<String> table_checkout(@PathVariable UUID id)
+    {
+        table_service.table_checkout(id);
+        return new ResponseEntity<>("Checkout table with id: " + id, HttpStatus.OK);
+    }
 }
