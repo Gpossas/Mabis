@@ -5,11 +5,12 @@ import java.util.UUID;
 public class QRCodeAttachment implements Attachment
 {
     private final byte[] byte_array;
+    private final String name;
 
     @Override
     public String get_name()
     {
-        return UUID.randomUUID().toString();
+        return this.name;
     }
 
     @Override
@@ -24,8 +25,9 @@ public class QRCodeAttachment implements Attachment
         return byte_array;
     }
 
-    public QRCodeAttachment(byte[] byte_array)
+    public QRCodeAttachment(String name, byte[] byte_array)
     {
+        this.name = name;
         this.byte_array = byte_array;
     }
 
