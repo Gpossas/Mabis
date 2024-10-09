@@ -18,4 +18,9 @@ public class AttachmentService
     {
         return this.storage_service.upload(attachment);
     }
+
+    public void delete(String key)
+    {
+        this.storage_service.delete(key);
+    }
 }
