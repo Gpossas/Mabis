@@ -1,9 +1,11 @@
 package com.mabis.domain.restaurant_table;
 
 
+import com.mabis.domain.attachment.Attachment;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Table(name = "tables")
@@ -34,14 +36,12 @@ public class RestaurantTable
     @Column(nullable = false)
     private int capacity;
 
-    @Column
-    private String qr_code_url;
-
-    @Column
-    private String token;
-
     @Column(nullable = false)
     private String status = table_status.INACTIVE.getStatus();
+
+    @OneToOne(targetEntity = Attachment.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "qr_code_id")
+    private Attachment qr_code;
 
     public RestaurantTable(int number, int quantity)
     {
