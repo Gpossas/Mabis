@@ -1,7 +1,7 @@
 package com.mabis.domain.attachment;
 
 
-public class QRCodeAttachment implements Attachment
+public class QRCodeAttachmentUpload implements AttachmentUpload
 {
     private final byte[] byte_array;
     private final String name;
@@ -24,7 +24,7 @@ public class QRCodeAttachment implements Attachment
         return byte_array;
     }
 
-    public QRCodeAttachment(String name, byte[] byte_array)
+    public QRCodeAttachmentUpload(String name, byte[] byte_array)
     {
         this.name = name;
         this.byte_array = byte_array;

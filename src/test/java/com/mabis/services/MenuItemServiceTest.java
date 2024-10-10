@@ -88,7 +88,7 @@ class MenuItemServiceTest
 
         Mockito.when(storage_service_factory.get_service(Mockito.any())).thenReturn(storage_service);
         Mockito.when(context.getBean(AttachmentService.class, storage_service)).thenReturn(attachment_service);
-        Mockito.when(attachment_service.upload(Mockito.any(MultipartAttachment.class))).thenReturn(url);
+        Mockito.when(attachment_service.upload(Mockito.any(MultipartAttachmentUpload.class))).thenReturn(url);
         Mockito.when(menu_item_repository.save(Mockito.any(MenuItem.class))).thenReturn(new MenuItem());
 
         menu_item_service.create_menu_item(menu_item_dto);

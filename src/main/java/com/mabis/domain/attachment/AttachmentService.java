@@ -14,7 +14,7 @@ public class AttachmentService
         this.storage_service = storage_service;
     }
 
-    public String upload(Attachment attachment)
+    public String upload(AttachmentUpload attachment)
     {
         return this.storage_service.upload(attachment);
     }

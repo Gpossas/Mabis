@@ -1,6 +1,6 @@
 package com.mabis.domain.attachment;
 
-public interface Attachment
+public interface AttachmentUpload
 {
     String get_name();
     String get_content_type();

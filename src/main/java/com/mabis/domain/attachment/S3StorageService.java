@@ -19,7 +19,7 @@ public class S3StorageService implements StorageService
     private final S3Client s3;
 
     @Override
-    public String upload(Attachment attachment)
+    public String upload(AttachmentUpload attachment)
     {
         String contentType = attachment.get_content_type();
         String key = attachment.get_name();

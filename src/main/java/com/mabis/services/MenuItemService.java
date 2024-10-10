@@ -1,7 +1,7 @@
 package com.mabis.services;
 
 import com.mabis.domain.attachment.AttachmentService;
-import com.mabis.domain.attachment.MultipartAttachment;
+import com.mabis.domain.attachment.MultipartAttachmentUpload;
 import com.mabis.domain.attachment.StorageService;
 import com.mabis.domain.attachment.StorageServiceFactory;
 import com.mabis.domain.dish_type.DishType;
@@ -34,7 +34,7 @@ public class MenuItemService
         {
             StorageService storageService = storage_service_factory.get_service("S3");
             AttachmentService attachmentService = context.getBean(AttachmentService.class, storageService);
-            String url = attachmentService.upload(new MultipartAttachment(menu_item_dto.image()));
+            String url = attachmentService.upload(new MultipartAttachmentUpload(menu_item_dto.image()));
             menu_item.setImage_url(url);
         }
 

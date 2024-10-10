@@ -5,7 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
-public class MultipartAttachment implements Attachment
+public class MultipartAttachmentUpload implements AttachmentUpload
 {
     private final String name;
     private final String content_type;
@@ -29,7 +29,7 @@ public class MultipartAttachment implements Attachment
         return bytes;
     }
 
-    public MultipartAttachment(MultipartFile multipart_file)
+    public MultipartAttachmentUpload(MultipartFile multipart_file)
     {
         this.name = multipart_file.getOriginalFilename();
         this.content_type = multipart_file.getContentType();
