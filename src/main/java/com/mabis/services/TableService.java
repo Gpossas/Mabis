@@ -6,6 +6,7 @@ import com.mabis.domain.restaurant_table.RestaurantTable;
 import com.mabis.exceptions.ActiveTableException;
 import com.mabis.exceptions.NotActiveTableException;
 import com.mabis.exceptions.TableNotFoundException;
+import com.mabis.repositories.AttachmentRepository;
 import com.mabis.repositories.TableRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +20,7 @@ import java.util.*;
 public class TableService
 {
     private final TableRepository table_repository;
+    private final AttachmentRepository attachment_repository;
     private final QRCodeService qr_code_service;
     private final StorageServiceFactory storage_factory;
     private final ApplicationContext context;
@@ -79,18 +81,18 @@ public class TableService
         String token = String.valueOf(table.getNumber()) + UUID.randomUUID();
 
         byte[] qr_code_bytes = qr_code_service.generate_qr_code(table_token_url + token);
-        AttachmentUpload qr_code = new QRCodeAttachmentUpload(token, qr_code_bytes);
+        AttachmentUpload qr_code_upload = new QRCodeAttachmentUpload(token, qr_code_bytes);
 
         StorageService storage_service = storage_factory.get_service("S3");
         AttachmentService attachment_service = context.getBean(AttachmentService.class, storage_service);
-        String image_url = attachment_service.upload(qr_code);
+        String image_url = attachment_service.upload(qr_code_upload);
 
         table.setStatus(RestaurantTable.table_status.ACTIVE.getStatus());
-        table.setQr_code_url(image_url);
-        table.setToken(token);
+        Attachment qr_code = new Attachment(token, image_url);
+        table.setQr_code(qr_code);
         table_repository.save(table);
 
-        return table.getQr_code_url();
+        return image_url;
     }
 
     public void table_checkout(UUID id)
@@ -104,11 +106,13 @@ public class TableService
 
         StorageService storage_service = storage_factory.get_service("S3");
         AttachmentService attachment_service = context.getBean(AttachmentService.class, storage_service);
-        attachment_service.delete(table.getToken());
+        attachment_service.delete(table.getQr_code().getName());
 
-        table.setQr_code_url(null);
-        table.setToken(null);
+        Attachment qr_code = table.getQr_code();
+        table.setQr_code(null);
         table.setStatus(RestaurantTable.table_status.INACTIVE.getStatus());
         table_repository.save(table);
+
+        attachment_repository.delete(qr_code);
     }
 }
