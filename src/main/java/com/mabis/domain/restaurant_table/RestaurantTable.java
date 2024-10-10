@@ -5,7 +5,6 @@ import com.mabis.domain.attachment.Attachment;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Table(name = "tables")
