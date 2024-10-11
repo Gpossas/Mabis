@@ -48,4 +48,9 @@ public class MenuItemService
 
         return ResponseMenuItemDTO.from_menu_item(menu_item);
     }
+
+    public List<ResponseMenuItemDTO> get_all_menu_items()
+    {
+        return menu_item_repository.find_all();
+    }
 }
