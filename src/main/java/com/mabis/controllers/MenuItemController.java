@@ -1,7 +1,6 @@
 package com.mabis.controllers;
 
 import com.mabis.domain.menu_item.CreateMenuItemDTO;
-import com.mabis.domain.menu_item.MenuItem;
 import com.mabis.domain.menu_item.ResponseMenuItemDTO;
 import com.mabis.services.MenuItemService;
 import jakarta.validation.Valid;
