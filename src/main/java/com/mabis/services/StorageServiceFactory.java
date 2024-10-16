@@ -1,4 +1,4 @@
-package com.mabis.domain.attachment;
+package com.mabis.services;
 
 import com.mabis.exceptions.InvalidStorageServiceException;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,6 @@
-package com.mabis.domain.attachment;
+package com.mabis.services;
+
+import com.mabis.domain.attachment.AttachmentUpload;
 
 public interface StorageService
 {

@@ -1,8 +1,10 @@
-package com.mabis.domain.attachment;
+package com.mabis.services;
 
+import com.mabis.domain.attachment.AttachmentUpload;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
@@ -10,7 +12,7 @@ import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class S3StorageService implements StorageService
 {

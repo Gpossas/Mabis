@@ -1,10 +1,11 @@
-package com.mabis.domain.attachment;
+package com.mabis.services;
 
+import com.mabis.domain.attachment.AttachmentUpload;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 @Scope(value = "prototype")
-@Component
+@Service
 public class AttachmentService
 {
     private final StorageService storage_service;
