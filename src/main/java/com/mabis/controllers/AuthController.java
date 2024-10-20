@@ -52,7 +52,7 @@ public class AuthController
     public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO credentials)
     {
         UserDetails user = user_details_service.loadUserByUsername(credentials.email());
-        if (!password_encoder.matches(user.getPassword(), credentials.password()))
+        if (!password_encoder.matches(credentials.password(), user.getPassword()))
         {
             throw new UnmatchPassword();
         }
