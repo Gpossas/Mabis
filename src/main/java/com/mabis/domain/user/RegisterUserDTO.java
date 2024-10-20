@@ -21,5 +21,6 @@ public record RegisterUserDTO(
 
         @NotBlank
         @Size(max = 6)
-        User.Roles role
+        String role
 ) {}
+//TODO: role should be a custom validator for enum
