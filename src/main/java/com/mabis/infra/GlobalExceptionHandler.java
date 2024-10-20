@@ -81,4 +81,11 @@ public class GlobalExceptionHandler
         ErrorResponse response = new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, exception.getMessage());
         return new ResponseEntity<>(response, response.getHttp_status());
     }
+
+    @ExceptionHandler(UserEmailAlreadyInUse.class)
+    public ResponseEntity<ErrorResponse> email_in_use_exception_handler(UserEmailAlreadyInUse exception)
+    {
+        ErrorResponse response = new ErrorResponse(HttpStatus.CONFLICT, exception.getMessage());
+        return new ResponseEntity<>(response, response.getHttp_status());
+    }
 }
