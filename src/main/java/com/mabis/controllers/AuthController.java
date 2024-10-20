@@ -49,7 +49,7 @@ public class AuthController
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(LoginRequestDTO credentials)
+    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO credentials)
     {
         UserDetails user = user_details_service.loadUserByUsername(credentials.email());
         if (!password_encoder.matches(user.getPassword(), credentials.password()))
