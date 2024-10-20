@@ -88,4 +88,11 @@ public class GlobalExceptionHandler
         ErrorResponse response = new ErrorResponse(HttpStatus.CONFLICT, exception.getMessage());
         return new ResponseEntity<>(response, response.getHttp_status());
     }
+
+    @ExceptionHandler(UnmatchPassword.class)
+    public ResponseEntity<ErrorResponse> unmatch_password_exception_handler(UnmatchPassword exception)
+    {
+        ErrorResponse response = new ErrorResponse(HttpStatus.BAD_REQUEST, exception.getMessage());
+        return new ResponseEntity<>(response, response.getHttp_status());
+    }
 }
