@@ -47,15 +47,15 @@ public class AuthController
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO credentials)
     {
-        UserDetailsImpl user_details = user_details_service.loadUserByUsername(credentials.email());
+        UserDetails user_details = user_details_service.loadUserByUsername(credentials.email());
         if (!password_encoder.matches(credentials.password(), user_details.getPassword()))
         {
             throw new UnmatchPassword();
         }
 
-        String token = jwt_service.generate_token(user_details.user());
+        String token = jwt_service.generate_token(user_details.get_user());
 
-        return ResponseEntity.ok(LoginResponseDTO.from_user(user_details.user(), token));
+        return ResponseEntity.ok(LoginResponseDTO.from_user(user_details.get_user(), token));
     }
 }
 
