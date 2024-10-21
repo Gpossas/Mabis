@@ -29,6 +29,11 @@ public class SpringSecurityConfig
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/categories/**").hasAuthority("OWNER")
+                        .requestMatchers(HttpMethod.POST, "/dish-types/**").hasAuthority("OWNER")
+                        .requestMatchers(HttpMethod.POST, "/menu-items/**").hasAuthority("OWNER")
+                        .requestMatchers(HttpMethod.POST, "/tables/**").hasAuthority("OWNER")
+                        .requestMatchers(HttpMethod.PATCH, "/tables/**").hasAnyAuthority("OWNER", "WAITER")
+                        .requestMatchers(HttpMethod.DELETE, "/tables/**").hasAuthority("OWNER")
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwt_authentication_filter, UsernamePasswordAuthenticationFilter.class)
