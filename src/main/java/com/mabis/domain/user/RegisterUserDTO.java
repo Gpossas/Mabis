@@ -1,11 +1,13 @@
 package com.mabis.domain.user;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public record RegisterUserDTO(
         @NotBlank
         @Size(max = 100)
+        @Email
         String email,
 
         @NotBlank
