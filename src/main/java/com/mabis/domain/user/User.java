@@ -41,6 +41,7 @@ public class User
     @Column(nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Roles role;
 
@@ -49,6 +50,6 @@ public class User
         this.first_name = dto.first_name();
         this.last_name = dto.last_name();
         this.email = dto.email();
-        this.role = dto.role();
+        this.role = Roles.valueOf(dto.role());
     }
 }
