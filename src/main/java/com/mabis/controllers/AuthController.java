@@ -47,7 +47,7 @@ public class AuthController
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO credentials)
     {
-        UserDetailsImpl user_details = (UserDetailsImpl) user_details_service.loadUserByUsername(credentials.email());
+        UserDetailsImpl user_details = user_details_service.loadUserByUsername(credentials.email());
         if (!password_encoder.matches(credentials.password(), user_details.getPassword()))
         {
             throw new UnmatchPassword();
