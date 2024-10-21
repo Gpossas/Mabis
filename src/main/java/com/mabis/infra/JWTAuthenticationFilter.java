@@ -1,6 +1,5 @@
 package com.mabis.infra;
 
-import com.mabis.domain.user.UserDetailsImpl;
 import com.mabis.services.JWTService;
 import com.mabis.services.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
