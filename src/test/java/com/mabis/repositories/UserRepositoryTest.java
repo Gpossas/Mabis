@@ -39,4 +39,10 @@ public class UserRepositoryTest
 
         assertTrue(user_repository.findByEmail("gui@gmail.com").isPresent());
     }
+
+    @Test
+    void test_find_user_by_email_non_existent_email()
+    {
+        assertTrue(user_repository.findByEmail("gui@gmail.com").isEmpty());
+    }
 }
