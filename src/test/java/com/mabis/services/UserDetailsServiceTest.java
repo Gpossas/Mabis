@@ -10,12 +10,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
@@ -50,5 +53,20 @@ public class UserDetailsServiceTest
         UserDetails userDetails = user_details_service.loadUserByUsername(user.getEmail());
 
         assertEquals("gui@gmail.com", userDetails.getUsername());
+    }
+
+    @Test
+    void test_correct_set_authorities()
+    {
+        RegisterUserDTO dto = new RegisterUserDTO("gui@gmail.com", "gui", null, "password", "WAITER");
+        User user = new User(dto);
+        user.setPassword("password");
+        user_repository.save(user);
+
+        Mockito.when(user_repository.findByEmail("gui@gmail.com")).thenReturn(Optional.of(user));
+
+        UserDetails userDetails = user_details_service.loadUserByUsername(user.getEmail());
+
+        assertIterableEquals(Collections.singleton(new SimpleGrantedAuthority("WAITER")), userDetails.getAuthorities());
     }
 }
