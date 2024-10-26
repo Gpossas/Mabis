@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Locale;
 import java.util.UUID;
 
 @Table(name = "users")
@@ -49,7 +50,7 @@ public class User
     {
         this.first_name = dto.first_name();
         this.last_name = dto.last_name();
-        this.email = dto.email();
+        this.email = dto.email().toLowerCase();
         this.role = Roles.valueOf(dto.role());
     }
 }
