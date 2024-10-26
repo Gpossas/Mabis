@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Locale;
 import java.util.UUID;
 
 @Table(name = "users")
