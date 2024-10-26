@@ -28,4 +28,15 @@ public class UserRepositoryTest
 
         assertTrue(user_repository.findByEmail(email).isPresent());
     }
+
+    @Test
+    void test_find_user_by_email_case_insensitivity()
+    {
+        RegisterUserDTO dto = new RegisterUserDTO("Gui@gmail.com", "gui", null, null, "OWNER");
+        User user = new User(dto);
+        user.setPassword("somepassword");
+        user_repository.save(user);
+
+        assertTrue(user_repository.findByEmail("gui@gmail.com").isPresent());
+    }
 }
