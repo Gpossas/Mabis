@@ -35,10 +35,4 @@ class JWTServiceTest
                     .hasMessage("The Algorithm cannot be null.");
         }
     }
-
-    @Test
-    void validate_token()
-    {
-
-    }
 }
