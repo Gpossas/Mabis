@@ -3,7 +3,6 @@ package com.mabis.services;
 import com.mabis.domain.user.LoginResponseDTO;
 import com.mabis.domain.user.RegisterUserDTO;
 import com.mabis.domain.user.User;
-import com.mabis.exceptions.DishTypeNotFoundException;
 import com.mabis.exceptions.UserEmailAlreadyInUse;
 import com.mabis.repositories.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -76,6 +75,21 @@ class AuthServiceTest
     @Test
     void test_password_hash()
     {
+        // start mock
+        RegisterUserDTO dto = new RegisterUserDTO("", null, null, "test_password", "WAITER");
 
+        Mockito.when(user_repository.findByEmail(Mockito.anyString())).thenReturn(Optional.empty());
+        Mockito.when(password_encoder.encode(dto.password())).thenReturn("hash_password");
+        Mockito.when(user_repository.save(Mockito.any(User.class))).thenReturn(new User(dto));
+
+        ArgumentCaptor<User> user_captor = ArgumentCaptor.forClass(User.class);
+        //end mock
+
+        auth_service.register(dto);
+
+        Mockito.verify(user_repository).save(user_captor.capture());
+
+        assertNotEquals("test_password", user_captor.getValue().getPassword());
+        assertEquals("hash_password", user_captor.getValue().getPassword());
     }
 }
