@@ -2,7 +2,6 @@ package com.mabis.controllers;
 
 import com.mabis.domain.user.*;
 import com.mabis.exceptions.UnmatchPassword;
-import com.mabis.exceptions.UserEmailAlreadyInUse;
 import com.mabis.repositories.UserRepository;
 import com.mabis.services.AuthService;
 import com.mabis.services.JWTService;
