@@ -4,6 +4,7 @@ import com.mabis.domain.user.*;
 import com.mabis.exceptions.UnmatchPassword;
 import com.mabis.exceptions.UserEmailAlreadyInUse;
 import com.mabis.repositories.UserRepository;
+import com.mabis.services.AuthService;
 import com.mabis.services.JWTService;
 import com.mabis.services.UserDetailsServiceImpl;
 import jakarta.validation.Valid;
@@ -25,23 +26,12 @@ public class AuthController
     private final UserRepository user_repository;
     private final JWTService jwt_service;
     private final UserDetailsServiceImpl user_details_service;
+    private final AuthService auth_service;
 
     @PostMapping("/register")
     public ResponseEntity<LoginResponseDTO> register(@Valid @RequestBody RegisterUserDTO dto)
     {
-        if (user_repository.findByEmail(dto.email()).isPresent())
-        {
-            throw new UserEmailAlreadyInUse();
-        }
-
-        User user = new User(dto);
-        user.setPassword(password_encoder.encode(dto.password()));
-
-        user = user_repository.save(user);
-
-        String token = jwt_service.generate_token(user);
-
-        return new ResponseEntity<>(LoginResponseDTO.from_user(user, token), HttpStatus.CREATED);
+        return new ResponseEntity<>(auth_service.register(dto), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
