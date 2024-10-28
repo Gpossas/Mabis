@@ -1,8 +1,7 @@
 package com.mabis.services;
 
-import com.mabis.domain.user.LoginResponseDTO;
-import com.mabis.domain.user.RegisterUserDTO;
-import com.mabis.domain.user.User;
+import com.mabis.domain.user.*;
+import com.mabis.exceptions.UnmatchPassword;
 import com.mabis.exceptions.UserEmailAlreadyInUse;
 import com.mabis.repositories.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -30,6 +29,9 @@ class AuthServiceTest
 
     @Mock
     PasswordEncoder password_encoder;
+
+    @Mock
+    UserDetailsServiceImpl user_details_service;
 
     @InjectMocks
     AuthService auth_service;
@@ -91,5 +93,18 @@ class AuthServiceTest
 
         assertNotEquals("test_password", user_captor.getValue().getPassword());
         assertEquals("hash_password", user_captor.getValue().getPassword());
+    }
+
+    @Test
+    void test_error_throw_if_password_do_not_match_in_login()
+    {
+        UserDetails user = Mockito.mock(UserDetails.class);
+        LoginRequestDTO dto = Mockito.mock(LoginRequestDTO.class);
+        Mockito.when(user_details_service.loadUserByUsername(Mockito.any())).thenReturn(user);
+        Mockito.when(password_encoder.matches(Mockito.any(), Mockito.any())).thenReturn(false);
+
+        assertThatThrownBy(() -> auth_service.login(dto))
+                .isInstanceOf(UnmatchPassword.class)
+                .hasMessage("Password doesn't match");
     }
 }
