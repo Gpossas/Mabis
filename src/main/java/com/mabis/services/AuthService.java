@@ -1,8 +1,7 @@
 package com.mabis.services;
 
-import com.mabis.domain.user.LoginResponseDTO;
-import com.mabis.domain.user.RegisterUserDTO;
-import com.mabis.domain.user.User;
+import com.mabis.domain.user.*;
+import com.mabis.exceptions.UnmatchPassword;
 import com.mabis.exceptions.UserEmailAlreadyInUse;
 import com.mabis.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +15,7 @@ public class AuthService
     private final PasswordEncoder password_encoder;
     private final UserRepository user_repository;
     private final JWTService jwt_service;
+    private final UserDetailsServiceImpl user_details_service;
 
 
     public LoginResponseDTO register(RegisterUserDTO dto)
@@ -32,5 +32,18 @@ public class AuthService
         String token = jwt_service.generate_token(user);
 
         return LoginResponseDTO.from_user(user, token);
+    }
+
+    public LoginResponseDTO login(LoginRequestDTO credentials)
+    {
+        UserDetails user_details = user_details_service.loadUserByUsername(credentials.email());
+        if (!password_encoder.matches(credentials.password(), user_details.getPassword()))
+        {
+            throw new UnmatchPassword();
+        }
+
+        String token = jwt_service.generate_token(user_details.get_user());
+
+        return LoginResponseDTO.from_user(user_details.get_user(), token);
     }
 }
