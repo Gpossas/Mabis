@@ -1,5 +1,6 @@
 package com.mabis.infra;
 
+import com.auth0.jwt.exceptions.JWTCreationException;
 import com.mabis.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -71,6 +72,27 @@ public class GlobalExceptionHandler
     private ResponseEntity<ErrorResponse> table_not_active_exception_handler(NotActiveTableException exception)
     {
         ErrorResponse response = new ErrorResponse(HttpStatus.CONFLICT, exception.getMessage());
+        return new ResponseEntity<>(response, response.getHttp_status());
+    }
+
+    @ExceptionHandler(JWTCreationException.class)
+    private ResponseEntity<ErrorResponse> jwt_creation_exception_handler(JWTCreationException exception)
+    {
+        ErrorResponse response = new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, exception.getMessage());
+        return new ResponseEntity<>(response, response.getHttp_status());
+    }
+
+    @ExceptionHandler(UserEmailAlreadyInUse.class)
+    public ResponseEntity<ErrorResponse> email_in_use_exception_handler(UserEmailAlreadyInUse exception)
+    {
+        ErrorResponse response = new ErrorResponse(HttpStatus.CONFLICT, exception.getMessage());
+        return new ResponseEntity<>(response, response.getHttp_status());
+    }
+
+    @ExceptionHandler(UnmatchPassword.class)
+    public ResponseEntity<ErrorResponse> unmatch_password_exception_handler(UnmatchPassword exception)
+    {
+        ErrorResponse response = new ErrorResponse(HttpStatus.BAD_REQUEST, exception.getMessage());
         return new ResponseEntity<>(response, response.getHttp_status());
     }
 }

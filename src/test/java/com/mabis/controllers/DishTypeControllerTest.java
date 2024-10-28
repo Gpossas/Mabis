@@ -3,16 +3,21 @@ package com.mabis.controllers;
 import com.mabis.domain.dish_type.CreateDishTypeDTO;
 import com.mabis.domain.dish_type.ResponseDishTypeDTO;
 import com.mabis.services.DishTypeService;
+import com.mabis.services.JWTService;
+import com.mabis.services.UserDetailsServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
+
 
 import java.util.UUID;
 
@@ -26,6 +31,13 @@ class DishTypeControllerTest
     @MockBean
     private DishTypeService dish_type_service;
 
+    @MockBean
+    private JWTService jwtService;
+
+    @MockBean
+    private UserDetailsServiceImpl userDetailsService;
+
+    @WithMockUser(authorities = "OWNER")
     @Test
     void create_dish_type() throws Exception
     {
@@ -36,23 +48,27 @@ class DishTypeControllerTest
 
         mvc.perform(
             MockMvcRequestBuilders.post("/dish-types/create")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(payload)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(payload)
             )
             .andExpect(MockMvcResultMatchers.status().isCreated())
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
     }
 
+    @WithMockUser(authorities = "OWNER")
     @Test
     void throw_400_missing_dto_parameter_payload() throws Exception
     {
         mvc.perform(
             MockMvcRequestBuilders.post("/dish-types/create")
-                .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
+    @WithMockUser(authorities = "OWNER")
     @Test
     void throw_400_invalid_dto_parameters() throws Exception
     {
@@ -61,8 +77,9 @@ class DishTypeControllerTest
 
         mvc.perform(
             MockMvcRequestBuilders.post("/dish-types/create")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(payload)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(payload)
         )
         .andExpect(MockMvcResultMatchers.status().isBadRequest())
         .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].field").value("name"))
