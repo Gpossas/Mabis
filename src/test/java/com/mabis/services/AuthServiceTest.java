@@ -3,6 +3,8 @@ package com.mabis.services;
 import com.mabis.domain.user.LoginResponseDTO;
 import com.mabis.domain.user.RegisterUserDTO;
 import com.mabis.domain.user.User;
+import com.mabis.exceptions.DishTypeNotFoundException;
+import com.mabis.exceptions.UserEmailAlreadyInUse;
 import com.mabis.repositories.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -44,7 +47,6 @@ class AuthServiceTest
                 "WAITER");
         User user = new User(dto);
 
-
         Mockito.when(user_repository.findByEmail(dto.email())).thenReturn(Optional.empty());
         Mockito.when(password_encoder.encode(dto.password())).thenReturn("hash");
         Mockito.when(user_repository.save(Mockito.any(User.class))).thenReturn(user);
@@ -61,7 +63,14 @@ class AuthServiceTest
     @Test
     void test_register_email_already_in_use_throw_error()
     {
+        RegisterUserDTO dto = new RegisterUserDTO("test@email.com", null, null, null, null);
 
+        Mockito.when(user_repository.findByEmail("test@email.com"))
+                .thenReturn(Optional.of(Mockito.mock(User.class)));
+
+        assertThatThrownBy(() -> auth_service.register(dto))
+                .isInstanceOf(UserEmailAlreadyInUse.class)
+                .hasMessage("This email is already in use");
     }
 
     @Test
