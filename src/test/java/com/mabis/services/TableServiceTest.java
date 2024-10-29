@@ -5,6 +5,7 @@ import com.mabis.domain.attachment.AttachmentUpload;
 import com.mabis.domain.restaurant_table.CreateTablesDTO;
 import com.mabis.domain.restaurant_table.RestaurantTable;
 import com.mabis.exceptions.ActiveTableException;
+import com.mabis.exceptions.NotActiveTableException;
 import com.mabis.exceptions.TableNotFoundException;
 import com.mabis.repositories.TableRepository;
 import org.junit.jupiter.api.Test;
@@ -141,5 +142,17 @@ class TableServiceTest
         assertThatThrownBy(() -> table_service.table_checkout(UUID.randomUUID()))
                 .isInstanceOf(TableNotFoundException.class)
                 .hasMessage("Table not found");
+    }
+
+    @Test
+    void test_checkout_table_not_in_use_throws_error()
+    {
+        RestaurantTable table = new RestaurantTable(UUID.randomUUID(), 2, 2, "ACTIVE", null);
+
+        Mockito.when(table_repository.findById(table.getId())).thenReturn(Optional.of(table));
+
+        assertThatThrownBy(() -> table_service.table_checkout(table.getId()))
+                .isInstanceOf(NotActiveTableException.class)
+                .hasMessage("Table is not active");
     }
 }
