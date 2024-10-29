@@ -42,9 +42,9 @@ public class RestaurantTable
     @JoinColumn(name = "qr_code_id")
     private Attachment qr_code;
 
-    public RestaurantTable(int number, int quantity)
+    public RestaurantTable(int number, int capacity)
     {
         this.number = number;
-        this.capacity = quantity;
+        this.capacity = capacity;
     }
 }
