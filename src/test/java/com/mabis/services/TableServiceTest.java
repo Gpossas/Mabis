@@ -70,4 +70,14 @@ class TableServiceTest
                 .isInstanceOf(TableNotFoundException.class)
                 .hasMessage("Table not found");
     }
+
+    @Test
+    void test_checkin_non_existent_table_throws_error()
+    {
+        Mockito.when(table_repository.findById(Mockito.any(UUID.class))).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> table_service.table_checkin(UUID.randomUUID()))
+                .isInstanceOf(TableNotFoundException.class)
+                .hasMessage("Table not found");
+    }
 }
