@@ -59,8 +59,7 @@ public class TableService
 
     public void delete_table_by_id(UUID id)
     {
-        Optional<RestaurantTable> table = table_repository.findById(id);
-        table.orElseThrow(TableNotFoundException::new);
+        table_repository.findById(id).orElseThrow(TableNotFoundException::new);
         table_repository.deleteById(id);
     }
 
