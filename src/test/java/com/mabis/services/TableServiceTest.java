@@ -132,4 +132,14 @@ class TableServiceTest
         assertNotNull(table.getQr_code());
         assertEquals("qr-code-url", table.getQr_code().getUrl());
     }
+
+    @Test
+    void test_checkout_non_existent_table_throws_error()
+    {
+        Mockito.when(table_repository.findById(Mockito.any(UUID.class))).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> table_service.table_checkout(UUID.randomUUID()))
+                .isInstanceOf(TableNotFoundException.class)
+                .hasMessage("Table not found");
+    }
 }
