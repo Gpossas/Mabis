@@ -1,5 +1,7 @@
 package com.mabis.services;
 
+import com.mabis.domain.attachment.Attachment;
+import com.mabis.domain.attachment.AttachmentUpload;
 import com.mabis.domain.restaurant_table.CreateTablesDTO;
 import com.mabis.domain.restaurant_table.RestaurantTable;
 import com.mabis.exceptions.ActiveTableException;
@@ -9,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationContext;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +25,15 @@ class TableServiceTest
 {
     @Mock
     TableRepository table_repository;
+
+    @Mock
+    QRCodeService qr_code_service;
+
+    @Mock
+    StorageServiceFactory storage_factory;
+
+    @Mock
+    ApplicationContext context;
 
     @InjectMocks
     TableService table_service;
@@ -92,5 +104,32 @@ class TableServiceTest
         assertThatThrownBy(() -> table_service.table_checkin(table.getId()))
                 .isInstanceOf(ActiveTableException.class)
                 .hasMessage("A table can't be modified while active");
+    }
+
+    @Test
+    void test_successful_table_checkin()
+    {
+        // start mock
+        RestaurantTable table = Mockito.spy(new RestaurantTable(UUID.randomUUID(), 1, 2, "INACTIVE", null));
+
+        Mockito.when(table_repository.findById(table.getId())).thenReturn(Optional.of(table));
+
+        Mockito.when(qr_code_service.generate_qr_code(Mockito.anyString())).thenReturn(null);
+
+        StorageService storage_service_mock = Mockito.mock(StorageService.class);
+        Mockito.when(storage_factory.get_service("S3")).thenReturn(storage_service_mock);
+        AttachmentService attachment_service_mock = Mockito.mock(AttachmentService.class);
+        Mockito.when(context.getBean(AttachmentService.class, storage_service_mock)).thenReturn(attachment_service_mock);
+
+        Mockito.when(attachment_service_mock.upload(Mockito.any(AttachmentUpload.class))).thenReturn("qr-code-url");
+        // end mock
+
+        table_service.table_checkin(table.getId());
+
+        Mockito.verify(table).setQr_code(Mockito.any(Attachment.class));
+        Mockito.verify(table).setStatus(RestaurantTable.table_status.ACTIVE.getStatus());
+        assertEquals("active", table.getStatus());
+        assertNotNull(table.getQr_code());
+        assertEquals("qr-code-url", table.getQr_code().getUrl());
     }
 }
