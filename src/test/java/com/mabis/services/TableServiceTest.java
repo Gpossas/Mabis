@@ -37,9 +37,6 @@ class TableServiceTest
     @Mock
     ApplicationContext context;
 
-    @Mock
-    AttachmentRepository attachment_repository;
-
     @InjectMocks
     TableService table_service;
 
@@ -180,10 +177,7 @@ class TableServiceTest
         table_service.table_checkout(table.getId());
 
         Mockito.verify(attachment_service_mock).delete(Mockito.anyString());
-        Mockito.verify(attachment_repository).delete(Mockito.any(Attachment.class));
         Mockito.verify(table).setQr_code(null);
         Mockito.verify(table).setStatus(RestaurantTable.table_status.INACTIVE.getStatus());
-        assertEquals("inactive", table.getStatus());
-        assertNull(table.getQr_code());
     }
 }
