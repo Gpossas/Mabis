@@ -20,7 +20,6 @@ import java.util.*;
 public class TableService
 {
     private final TableRepository table_repository;
-    private final AttachmentRepository attachment_repository;
     private final QRCodeService qr_code_service;
     private final StorageServiceFactory storage_factory;
     private final ApplicationContext context;
@@ -107,11 +106,8 @@ public class TableService
         AttachmentService attachment_service = context.getBean(AttachmentService.class, storage_service);
         attachment_service.delete(table.getQr_code().getName());
 
-        Attachment qr_code = table.getQr_code();
         table.setQr_code(null);
         table.setStatus(RestaurantTable.table_status.INACTIVE.getStatus());
         table_repository.save(table);
-
-        attachment_repository.delete(qr_code);
     }
 }
