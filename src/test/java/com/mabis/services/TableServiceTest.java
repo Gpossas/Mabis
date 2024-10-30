@@ -98,7 +98,7 @@ class TableServiceTest
     @Test
     void test_checkin_table_in_use_throws_error()
     {
-        RestaurantTable table = new RestaurantTable(UUID.randomUUID(), 2, 2, "ACTIVE", null);
+        RestaurantTable table = new RestaurantTable(UUID.randomUUID(), 2, 2, "active", null);
 
         Mockito.when(table_repository.findById(table.getId())).thenReturn(Optional.of(table));
 
