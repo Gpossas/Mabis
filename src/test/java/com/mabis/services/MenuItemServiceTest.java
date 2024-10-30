@@ -1,13 +1,11 @@
 package com.mabis.services;
 
-import com.mabis.domain.attachment.AttachmentService;
-import com.mabis.domain.attachment.S3StorageService;
-import com.mabis.domain.attachment.StorageService;
-import com.mabis.domain.attachment.StorageServiceFactory;
+import com.mabis.domain.attachment.*;
 import com.mabis.domain.dish_type.DishType;
 import com.mabis.domain.menu_item.CreateMenuItemDTO;
 import com.mabis.domain.menu_item.MenuItem;
 import com.mabis.domain.menu_item.ResponseMenuItemDTO;
+import com.mabis.repositories.AttachmentRepository;
 import com.mabis.repositories.MenuItemRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +26,9 @@ class MenuItemServiceTest
 {
     @Mock
     private MenuItemRepository menu_item_repository;
+
+    @Mock
+    private AttachmentRepository attachment_repository;
 
     @Mock
     private DishTypeService dish_type_service;
@@ -65,7 +66,7 @@ class MenuItemServiceTest
     void test_upload_when_image_is_null()
     {
         AttachmentService attachment_service = Mockito.mock(AttachmentService.class);
-        MenuItem menu_item = Mockito.mock(MenuItem.class);
+        ArgumentCaptor<MenuItem> menu_item = ArgumentCaptor.forClass(MenuItem.class);
         CreateMenuItemDTO menu_item_dto = new CreateMenuItemDTO(
                 "abc", 12F, null, null, null);
 
@@ -76,7 +77,8 @@ class MenuItemServiceTest
         Mockito.verify(storage_service_factory, Mockito.never()).get_service(Mockito.any());
         Mockito.verify(context, Mockito.never()).getBean(AttachmentService.class);
         Mockito.verify(attachment_service, Mockito.never()).upload(Mockito.any());
-        Mockito.verify(menu_item, Mockito.never()).setImage_url(Mockito.any());
+        Mockito.verify(menu_item_repository).save(menu_item.capture());
+        assertNull(menu_item.getValue().getAttachment());
     }
 
     @Test
@@ -85,22 +87,23 @@ class MenuItemServiceTest
         AttachmentService attachment_service = Mockito.mock(AttachmentService.class);
         CreateMenuItemDTO menu_item_dto = new CreateMenuItemDTO(
                 "abc", 12F, null, UUID.randomUUID(), Mockito.mock(MultipartFile.class));
-        ArgumentCaptor<MenuItem> men_item_argument_captor = ArgumentCaptor.forClass(MenuItem.class);
+        ArgumentCaptor<Attachment> attachment_argument_captor = ArgumentCaptor.forClass(Attachment.class);
         StorageService storage_service = Mockito.mock(StorageService.class);
         String url = "random_url";
 
         Mockito.when(storage_service_factory.get_service(Mockito.any())).thenReturn(storage_service);
         Mockito.when(context.getBean(AttachmentService.class, storage_service)).thenReturn(attachment_service);
-        Mockito.when(attachment_service.upload(menu_item_dto.image())).thenReturn(url);
+        Mockito.when(attachment_service.upload(Mockito.any(MultipartAttachmentUpload.class))).thenReturn(url);
         Mockito.when(menu_item_repository.save(Mockito.any(MenuItem.class))).thenReturn(new MenuItem());
+        Mockito.when(attachment_repository.save(Mockito.any(Attachment.class))).thenReturn(Mockito.any(Attachment.class));
 
         menu_item_service.create_menu_item(menu_item_dto);
 
         Mockito.verify(storage_service_factory, Mockito.times(1)).get_service(Mockito.any());
         Mockito.verify(context, Mockito.times(1)).getBean(AttachmentService.class, storage_service);
         Mockito.verify(attachment_service, Mockito.times(1)).upload(Mockito.any());
-        Mockito.verify(menu_item_repository).save(men_item_argument_captor.capture());
-        assertEquals(url, men_item_argument_captor.getValue().getImage_url());
+        Mockito.verify(attachment_repository).save(attachment_argument_captor.capture());
+        assertEquals(url, attachment_argument_captor.getValue().getUrl());
     }
 
 }

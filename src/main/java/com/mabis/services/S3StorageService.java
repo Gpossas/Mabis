@@ -1,19 +1,17 @@
-package com.mabis.domain.attachment;
+package com.mabis.services;
 
+import com.mabis.domain.attachment.AttachmentUpload;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
-import java.io.IOException;
-import java.util.UUID;
 
-
-@Component
+@Service
 @RequiredArgsConstructor
 public class S3StorageService implements StorageService
 {
@@ -22,25 +20,24 @@ public class S3StorageService implements StorageService
     private final S3Client s3;
 
     @Override
-    public String upload(MultipartFile file)
+    public String upload(AttachmentUpload attachment)
     {
-        String contentType = file.getContentType();
-        String key = UUID.randomUUID() + "-" + file.getOriginalFilename();
+        String contentType = attachment.get_content_type();
+        String key = attachment.get_name();
 
-        try
-        {
-            s3.putObject(
-                PutObjectRequest.builder().bucket(bucket_name).key(key).contentType(contentType).build(),
-                RequestBody.fromBytes(file.getBytes())
-            );
-        }
-        catch (IOException e)
-        {
-            System.out.println("Couldn't upload to S3");
-        }
+        s3.putObject(
+            PutObjectRequest.builder().bucket(bucket_name).key(key).contentType(contentType).build(),
+            RequestBody.fromBytes(attachment.get_bytes())
+        );
 
         GetUrlRequest request = GetUrlRequest.builder().bucket(bucket_name).key(key).build();
         return s3.utilities().getUrl(request).toExternalForm();
+    }
+
+    @Override
+    public void delete(String key)
+    {
+        s3.deleteObject(DeleteObjectRequest.builder().bucket(bucket_name).key(key).build());
     }
 
     @Override

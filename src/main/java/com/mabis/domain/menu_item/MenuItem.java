@@ -1,5 +1,6 @@
 package com.mabis.domain.menu_item;
 
+import com.mabis.domain.attachment.Attachment;
 import com.mabis.domain.category.Category;
 import com.mabis.domain.dish_type.DishType;
 import jakarta.persistence.*;
@@ -30,10 +31,11 @@ public class MenuItem
     private float price;
 
     @Column
-    private String image_url;
-
-    @Column
     private String description;
+
+    @OneToOne(targetEntity = Attachment.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id")
+    private Attachment attachment;
 
     @ManyToOne(targetEntity = DishType.class)
     @JoinColumn(name = "dish_type_id")

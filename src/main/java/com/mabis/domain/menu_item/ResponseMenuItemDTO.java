@@ -16,7 +16,7 @@ public record ResponseMenuItemDTO(
                 menu_item.getName(),
                 menu_item.getPrice(),
                 menu_item.getDescription(),
-                menu_item.getImage_url()
+                (menu_item.getAttachment() != null) ? menu_item.getAttachment().getUrl(): null
         );
     }
 }

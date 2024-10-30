@@ -1,8 +1,6 @@
 package com.mabis.services;
 
-import com.mabis.domain.attachment.AttachmentService;
-import com.mabis.domain.attachment.StorageService;
-import com.mabis.domain.attachment.StorageServiceFactory;
+import com.mabis.domain.attachment.*;
 import com.mabis.domain.dish_type.DishType;
 import com.mabis.domain.menu_item.CreateMenuItemDTO;
 import com.mabis.domain.menu_item.MenuItem;
@@ -11,6 +9,8 @@ import com.mabis.repositories.MenuItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service
@@ -33,12 +33,21 @@ public class MenuItemService
         {
             StorageService storageService = storage_service_factory.get_service("S3");
             AttachmentService attachmentService = context.getBean(AttachmentService.class, storageService);
-            String url = attachmentService.upload(menu_item_dto.image());
-            menu_item.setImage_url(url);
+
+            AttachmentUpload image_to_upload = new MultipartAttachmentUpload(menu_item_dto.image());
+            String url = attachmentService.upload(image_to_upload);
+
+            Attachment image = new Attachment(image_to_upload.get_name(), url);
+            menu_item.setAttachment(image);
         }
 
         menu_item = menu_item_repository.save(menu_item);
 
         return ResponseMenuItemDTO.from_menu_item(menu_item);
+    }
+
+    public List<ResponseMenuItemDTO> get_all_menu_items()
+    {
+        return menu_item_repository.find_all();
     }
 }
