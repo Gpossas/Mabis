@@ -7,6 +7,7 @@ import com.mabis.domain.restaurant_table.RestaurantTable;
 import com.mabis.exceptions.ActiveTableException;
 import com.mabis.exceptions.NotActiveTableException;
 import com.mabis.exceptions.TableNotFoundException;
+import com.mabis.repositories.AttachmentRepository;
 import com.mabis.repositories.TableRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,6 +36,9 @@ class TableServiceTest
 
     @Mock
     ApplicationContext context;
+
+    @Mock
+    AttachmentRepository attachment_repository;
 
     @InjectMocks
     TableService table_service;
@@ -154,5 +158,32 @@ class TableServiceTest
         assertThatThrownBy(() -> table_service.table_checkout(table.getId()))
                 .isInstanceOf(NotActiveTableException.class)
                 .hasMessage("Table is not active");
+    }
+
+    @Test
+    void test_successful_table_checkout()
+    {
+        // start mock
+        Attachment qr_code = new Attachment("name", "qr_code_url");
+        RestaurantTable table = Mockito.spy(
+                new RestaurantTable(UUID.randomUUID(), 1, 2, "active", qr_code));
+
+        Mockito.when(table_repository.findById(table.getId())).thenReturn(Optional.of(table));
+
+        StorageService storage_service_mock = Mockito.mock(StorageService.class);
+        Mockito.when(storage_factory.get_service("S3")).thenReturn(storage_service_mock);
+        AttachmentService attachment_service_mock = Mockito.mock(AttachmentService.class);
+        Mockito.when(context.getBean(AttachmentService.class, storage_service_mock)).thenReturn(attachment_service_mock);
+
+        // end mock
+
+        table_service.table_checkout(table.getId());
+
+        Mockito.verify(attachment_service_mock).delete(Mockito.anyString());
+        Mockito.verify(attachment_repository).delete(Mockito.any(Attachment.class));
+        Mockito.verify(table).setQr_code(null);
+        Mockito.verify(table).setStatus(RestaurantTable.table_status.INACTIVE.getStatus());
+        assertEquals("inactive", table.getStatus());
+        assertNull(table.getQr_code());
     }
 }
