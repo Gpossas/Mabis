@@ -5,7 +5,6 @@ import com.mabis.domain.dish_type.DishType;
 import com.mabis.domain.menu_item.CreateMenuItemDTO;
 import com.mabis.domain.menu_item.MenuItem;
 import com.mabis.domain.menu_item.ResponseMenuItemDTO;
-import com.mabis.repositories.AttachmentRepository;
 import com.mabis.repositories.MenuItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
@@ -19,7 +18,6 @@ import java.util.List;
 public class MenuItemService
 {
     private final MenuItemRepository menu_item_repository;
-    private final AttachmentRepository attachment_repository;
     private final DishTypeService dish_type_service;
     private final StorageServiceFactory storage_service_factory;
     private final ApplicationContext context;
@@ -40,7 +38,6 @@ public class MenuItemService
             String url = attachmentService.upload(image_to_upload);
 
             Attachment image = new Attachment(image_to_upload.get_name(), url);
-            image = attachment_repository.save(image);
             menu_item.setAttachment(image);
         }
 
