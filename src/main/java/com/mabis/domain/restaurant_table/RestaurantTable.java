@@ -38,7 +38,7 @@ public class RestaurantTable
     @Column(nullable = false)
     private String status = table_status.INACTIVE.getStatus();
 
-    @OneToOne(targetEntity = Attachment.class, cascade = CascadeType.ALL)
+    @OneToOne(targetEntity = Attachment.class, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "qr_code_id")
     private Attachment qr_code;
 
