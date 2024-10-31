@@ -102,4 +102,11 @@ public class GlobalExceptionHandler
         ErrorResponse response = new ErrorResponse(HttpStatus.NOT_FOUND, exception.getMessage());
         return new ResponseEntity<>(response, response.getHttp_status());
     }
+
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<ErrorResponse> menu_item_not_found_handler(OrderNotFoundException exception)
+    {
+        ErrorResponse response = new ErrorResponse(HttpStatus.NOT_FOUND, exception.getMessage());
+        return new ResponseEntity<>(response, response.getHttp_status());
+    }
 }
