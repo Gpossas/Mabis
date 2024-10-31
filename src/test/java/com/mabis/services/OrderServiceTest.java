@@ -17,6 +17,9 @@ class OrderServiceTest
     void test_place_order_not_active_table_throw_exception(){}
 
     @Test
+    void test_delete_non_existent_order_throw_exception(){}
+
+    @Test
     void test_successful_place_order(){}
 
     @Test
