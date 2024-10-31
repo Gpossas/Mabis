@@ -104,9 +104,16 @@ public class GlobalExceptionHandler
     }
 
     @ExceptionHandler(OrderNotFoundException.class)
-    public ResponseEntity<ErrorResponse> menu_item_not_found_handler(OrderNotFoundException exception)
+    public ResponseEntity<ErrorResponse> order_not_found_handler(OrderNotFoundException exception)
     {
         ErrorResponse response = new ErrorResponse(HttpStatus.NOT_FOUND, exception.getMessage());
+        return new ResponseEntity<>(response, response.getHttp_status());
+    }
+
+    @ExceptionHandler(TableTokenNotMatchException.class)
+    public ResponseEntity<ErrorResponse> table_token_not_match_handler(TableTokenNotMatchException exception)
+    {
+        ErrorResponse response = new ErrorResponse(HttpStatus.FORBIDDEN, exception.getMessage());
         return new ResponseEntity<>(response, response.getHttp_status());
     }
 }
