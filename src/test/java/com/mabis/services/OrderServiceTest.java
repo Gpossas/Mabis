@@ -20,6 +20,9 @@ class OrderServiceTest
     void test_delete_non_existent_order_throw_exception(){}
 
     @Test
+    void test_credentials_not_match_to_place_order_throw_exception(){}
+
+    @Test
     void test_successful_place_order(){}
 
     @Test
