@@ -110,4 +110,9 @@ public class TableService
         table.setStatus(RestaurantTable.table_status.INACTIVE.getStatus());
         table_repository.save(table);
     }
+
+    public RestaurantTable get_table_by_id(UUID id)
+    {
+        return table_repository.findById(id).orElseThrow(TableNotFoundException::new);
+    }
 }
