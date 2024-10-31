@@ -1,6 +1,5 @@
 package com.mabis.services;
 
-import com.mabis.exceptions.MenuItemNotFound;
 import com.mabis.exceptions.NotActiveTableException;
 import com.mabis.exceptions.TableNotFoundException;
 import com.mabis.exceptions.TableTokenNotMatchException;
