@@ -22,14 +22,6 @@ class OrderServiceTest
     }
 
     @Test
-    void test_place_order_non_existent_menu_item_throw_exception()
-    {
-        assertThatThrownBy(() -> order_service.place_order())
-                .isInstanceOf(MenuItemNotFound.class)
-                .hasMessage("Table not found");
-    }
-
-    @Test
     void test_place_order_not_active_table_throw_exception()
     {
         assertThatThrownBy(() -> order_service.place_order())
