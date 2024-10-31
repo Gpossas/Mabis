@@ -95,4 +95,11 @@ public class GlobalExceptionHandler
         ErrorResponse response = new ErrorResponse(HttpStatus.BAD_REQUEST, exception.getMessage());
         return new ResponseEntity<>(response, response.getHttp_status());
     }
+
+    @ExceptionHandler(MenuItemNotFound.class)
+    public ResponseEntity<ErrorResponse> menu_item_not_found_handler(MenuItemNotFound exception)
+    {
+        ErrorResponse response = new ErrorResponse(HttpStatus.NOT_FOUND, exception.getMessage());
+        return new ResponseEntity<>(response, response.getHttp_status());
+    }
 }
