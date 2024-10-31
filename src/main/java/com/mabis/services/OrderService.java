@@ -5,7 +5,10 @@ import com.mabis.domain.restaurant_table.RestaurantTable;
 import com.mabis.exceptions.NotActiveTableException;
 import com.mabis.exceptions.TableTokenNotMatchException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +34,13 @@ public class OrderService
 
     private void verify_credentials_authorized(RestaurantTable table, String token)
     {
-        if (table.getQr_code() != null && !table.getQr_code().getName().equals(token))
+        if (table.getQr_code() != null && !table.getQr_code().getName().equals(token)
+            || SecurityContextHolder.getContext().getAuthentication()
+            .getAuthorities().stream()
+            .anyMatch(authority ->
+                    authority.equals(new SimpleGrantedAuthority("ROLE_OWNER")) ||
+                    authority.equals(new SimpleGrantedAuthority("ROLE_WAITER"))
+            ))
         {
             throw new TableTokenNotMatchException(table.getNumber());
         }
