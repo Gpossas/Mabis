@@ -1,6 +1,7 @@
 package com.mabis.services;
 
 import com.mabis.domain.order.OrderRequestDTO;
+import com.mabis.domain.restaurant_table.RestaurantTable;
 import com.mabis.exceptions.NotActiveTableException;
 import com.mabis.exceptions.TableNotFoundException;
 import com.mabis.exceptions.TableTokenNotMatchException;
@@ -38,7 +39,18 @@ class OrderServiceTest
     @Test
     void test_place_order_not_active_table_throw_exception()
     {
-        assertThatThrownBy(() -> order_service.place_order())
+        RestaurantTable table = new RestaurantTable();
+        table.setStatus("INACTIVE");
+        OrderRequestDTO dto = new OrderRequestDTO(UUID.randomUUID(), null, null);
+
+        Mockito.when(table_service.get_table_by_id(dto.table_id())).thenReturn(table);
+
+        assertThatThrownBy(() -> order_service.place_order(dto))
+                .isInstanceOf(NotActiveTableException.class)
+                .hasMessage("Table is not active");
+
+        table.setStatus("RESERVED");
+        assertThatThrownBy(() -> order_service.place_order(dto))
                 .isInstanceOf(NotActiveTableException.class)
                 .hasMessage("Table is not active");
     }
