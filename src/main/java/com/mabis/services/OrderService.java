@@ -60,11 +60,11 @@ public class OrderService
     private void verify_credentials_authorized(RestaurantTable table, String token)
     {
         if (table.getQr_code() != null && !table.getQr_code().getName().equals(token)
-            || SecurityContextHolder.getContext().getAuthentication()
+            && SecurityContextHolder.getContext().getAuthentication()
             .getAuthorities().stream()
-            .anyMatch(authority ->
-                    authority.equals(new SimpleGrantedAuthority("ROLE_OWNER")) ||
-                    authority.equals(new SimpleGrantedAuthority("ROLE_WAITER"))
+            .noneMatch(authority ->
+                    authority.equals(new SimpleGrantedAuthority("OWNER")) ||
+                    authority.equals(new SimpleGrantedAuthority("WAITER"))
             ))
         {
             throw new TableTokenNotMatchException(table.getNumber());
