@@ -13,8 +13,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -31,10 +31,18 @@ public class OrderService
         this.verify_table_status_active(table);
         this.verify_credentials_authorized(table, dto.table_token());
 
+        Set<UUID> ids_menu_items = dto.menu_items().stream().map(OrderItemDTO::menu_item_id).collect(Collectors.toSet());
+        Map<UUID, MenuItem> menu_item_map = this.menu_item_service.find_id_in(ids_menu_items)
+                .stream().collect(Collectors.toMap(MenuItem::getId, item -> item));
         List<Order> orders = new ArrayList<>();
         for (OrderItemDTO order_item: dto.menu_items())
         {
-            MenuItem menu_item = menu_item_service.get_by_id(order_item.menu_item_id());
+            MenuItem menu_item = menu_item_map.get(order_item.menu_item_id());
+            if (menu_item == null)
+            {
+                continue;
+            }
+
             orders.add(new Order(order_item.quantity(), menu_item.getPrice(), order_item.description(), table, menu_item));
         }
 
