@@ -18,7 +18,7 @@ public class User
 {
     @Getter
     @AllArgsConstructor
-    enum Roles
+    public enum Roles
     {
         OWNER("OWNER"),
         WAITER("WAITER"),
