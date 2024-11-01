@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Repository
@@ -19,4 +20,6 @@ public interface MenuItemRepository extends JpaRepository<MenuItem, UUID>
             LEFT JOIN m.attachment a
     """)
     List<ResponseMenuItemDTO> find_all();
+
+    Set<MenuItem> findByIdIn(Set<UUID> ids);
 }

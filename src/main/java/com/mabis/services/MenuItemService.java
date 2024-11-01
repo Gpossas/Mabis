@@ -12,6 +12,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -56,5 +57,10 @@ public class MenuItemService
     public MenuItem get_by_id(UUID id)
     {
         return menu_item_repository.findById(id).orElseThrow(MenuItemNotFound::new);
+    }
+
+    public Set<MenuItem> find_id_in(Set<UUID> ids)
+    {
+        return menu_item_repository.findByIdIn(ids);
     }
 }
