@@ -47,7 +47,7 @@ public class Order
     @Column(nullable = false)
     private OrderStatus status = OrderStatus.PENDING;
 
-    @Column(nullable = false)
+    @Column()
     private LocalDateTime status_updated_at;
 
     @Column(nullable = false)
@@ -60,4 +60,13 @@ public class Order
     @ManyToOne(targetEntity = MenuItem.class)
     @JoinColumn(name = "menu_item_id")
     private MenuItem menu_item;
+
+    public Order(Integer quantity, Float price, String description, RestaurantTable table, MenuItem menu_item)
+    {
+        this.quantity = quantity;
+        this.price = price;
+        this.description = description;
+        this.table = table;
+        this.menu_item = menu_item;
+    }
 }
