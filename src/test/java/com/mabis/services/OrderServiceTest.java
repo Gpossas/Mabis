@@ -1,5 +1,6 @@
 package com.mabis.services;
 
+import com.mabis.domain.attachment.Attachment;
 import com.mabis.domain.order.OrderRequestDTO;
 import com.mabis.domain.restaurant_table.RestaurantTable;
 import com.mabis.exceptions.NotActiveTableException;
@@ -66,9 +67,17 @@ class OrderServiceTest
     @Test
     void test_credentials_not_match_to_place_order_throw_exception()
     {
-        assertThatThrownBy(() -> order_service.delete_order())
+        RestaurantTable table = new RestaurantTable();
+        table.setNumber(98);
+        table.setStatus("active");
+        table.setQr_code(new Attachment("token", "urll"));
+        OrderRequestDTO dto = new OrderRequestDTO(UUID.randomUUID(), "wrong-token", null);
+
+        Mockito.when(table_service.get_table_by_id(dto.table_id())).thenReturn(table);
+
+        assertThatThrownBy(() -> order_service.place_order(dto))
                 .isInstanceOf(TableTokenNotMatchException.class)
-                .hasMessage("You're not authorized to place orders in table " + table_number);
+                .hasMessage("You're not authorized to place orders in table " + 98);
     }
 
     @Test
