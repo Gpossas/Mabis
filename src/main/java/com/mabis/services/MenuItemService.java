@@ -5,12 +5,14 @@ import com.mabis.domain.dish_type.DishType;
 import com.mabis.domain.menu_item.CreateMenuItemDTO;
 import com.mabis.domain.menu_item.MenuItem;
 import com.mabis.domain.menu_item.ResponseMenuItemDTO;
+import com.mabis.exceptions.MenuItemNotFound;
 import com.mabis.repositories.MenuItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -49,5 +51,10 @@ public class MenuItemService
     public List<ResponseMenuItemDTO> get_all_menu_items()
     {
         return menu_item_repository.find_all();
+    }
+
+    public MenuItem get_by_id(UUID id)
+    {
+        return menu_item_repository.findById(id).orElseThrow(MenuItemNotFound::new);
     }
 }
