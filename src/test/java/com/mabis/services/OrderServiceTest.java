@@ -1,21 +1,36 @@
 package com.mabis.services;
 
+import com.mabis.domain.order.OrderRequestDTO;
 import com.mabis.exceptions.NotActiveTableException;
 import com.mabis.exceptions.TableNotFoundException;
 import com.mabis.exceptions.TableTokenNotMatchException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(MockitoExtension.class)
 class OrderServiceTest
 {
+    @Mock
+    TableService table_service;
+
+    @InjectMocks
+    OrderService order_service;
+
     @Test
     void test_place_order_non_existent_table_throw_exception()
     {
-        assertThatThrownBy(() -> order_service.place_order())
+        OrderRequestDTO dto = new OrderRequestDTO(UUID.randomUUID(), "", null);
+        Mockito.when(table_service.get_table_by_id(dto.table_id())).thenThrow(new TableNotFoundException());
+
+        assertThatThrownBy(() -> order_service.place_order(dto))
                 .isInstanceOf(TableNotFoundException.class)
                 .hasMessage("Table not found");
     }
