@@ -7,6 +7,7 @@ import com.mabis.domain.order.OrderItemDTO;
 import com.mabis.domain.order.OrderRequestDTO;
 import com.mabis.domain.restaurant_table.RestaurantTable;
 import com.mabis.exceptions.NotActiveTableException;
+import com.mabis.exceptions.OrderNotFoundException;
 import com.mabis.exceptions.TableTokenNotMatchException;
 import com.mabis.repositories.OrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +50,12 @@ public class OrderService
 
         orders = order_repository.saveAll(orders);
         return orders.stream().map(OrderClientResponseDTO::to_client_response).toList();
+    }
+
+    public void delete_order(UUID id)
+    {
+        order_repository.findById(id).orElseThrow(OrderNotFoundException::new);
+        order_repository.deleteById(id);
     }
 
     private void verify_table_status_active(RestaurantTable table)
