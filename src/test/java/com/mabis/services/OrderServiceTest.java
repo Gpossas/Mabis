@@ -21,10 +21,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -150,7 +147,15 @@ class OrderServiceTest
     }
 
     @Test
-    void test_successful_delete_order(){}
+    void test_successful_delete_order()
+    {
+        UUID id = UUID.randomUUID();
+
+        Mockito.when(order_repository.findById(id)).thenReturn(Optional.ofNullable(Mockito.mock(Order.class)));
+
+        order_service.delete_order(id);
+        Mockito.verify(order_repository).deleteById(id);
+    }
 
     private void authenticate_user_with_role(User.Roles role)
     {
