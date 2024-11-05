@@ -2,6 +2,7 @@ package com.mabis.services;
 
 import com.mabis.domain.menu_item.MenuItem;
 import com.mabis.domain.order.Order;
+import com.mabis.domain.order.OrderClientResponseDTO;
 import com.mabis.domain.order.OrderItemDTO;
 import com.mabis.domain.order.OrderRequestDTO;
 import com.mabis.domain.restaurant_table.RestaurantTable;
@@ -25,7 +26,7 @@ public class OrderService
     private final MenuItemService menu_item_service;
     private final OrderRepository order_repository;
 
-    public void place_order(OrderRequestDTO dto)
+    public List<OrderClientResponseDTO> place_order(OrderRequestDTO dto)
     {
         RestaurantTable table = table_service.get_table_by_id(dto.table_id());
         this.verify_table_status_active(table);
@@ -46,7 +47,8 @@ public class OrderService
             orders.add(new Order(order_item.quantity(), menu_item.getPrice(), order_item.description(), table, menu_item));
         }
 
-        order_repository.saveAll(orders);
+        orders = order_repository.saveAll(orders);
+        return orders.stream().map(OrderClientResponseDTO::to_client_response).toList();
     }
 
     private void verify_table_status_active(RestaurantTable table)
