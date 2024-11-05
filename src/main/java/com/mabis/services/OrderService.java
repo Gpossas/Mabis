@@ -12,6 +12,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -59,6 +60,7 @@ public class OrderService
     {
        Order order = order_repository.findById(dto.order_id()).orElseThrow(OrderNotFoundException::new);
        order.setStatus(Order.OrderStatus.valueOf(dto.order_status()));
+       order.setStatus_updated_at(LocalDateTime.now());
        order_repository.save(order);
        return order.getStatus();
     }

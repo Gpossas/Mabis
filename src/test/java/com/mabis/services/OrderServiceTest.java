@@ -22,6 +22,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -177,6 +178,7 @@ class OrderServiceTest
 
         order_service.update_status_order(dto);
         Mockito.verify(order_mock).setStatus(Order.OrderStatus.PREPARING);
+        Mockito.verify(order_mock).setStatus_updated_at(LocalDateTime.now());
     }
 
     private void authenticate_user_with_role(User.Roles role)
