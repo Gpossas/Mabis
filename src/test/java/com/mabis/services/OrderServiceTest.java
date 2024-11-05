@@ -5,6 +5,7 @@ import com.mabis.domain.menu_item.MenuItem;
 import com.mabis.domain.order.Order;
 import com.mabis.domain.order.OrderItemDTO;
 import com.mabis.domain.order.OrderRequestDTO;
+import com.mabis.domain.order.UpdateStatusOrderRequestDTO;
 import com.mabis.domain.restaurant_table.RestaurantTable;
 import com.mabis.domain.user.User;
 import com.mabis.domain.user.UserDetailsImpl;
@@ -155,6 +156,14 @@ class OrderServiceTest
 
         order_service.delete_order(id);
         Mockito.verify(order_repository).deleteById(id);
+    }
+
+    @Test
+    void test_thow_exception_update_status_order_in_non_existent_order()
+    {
+        assertThatThrownBy(() -> order_service.update_status_order(Mockito.mock(UpdateStatusOrderRequestDTO.class)))
+                .isInstanceOf(OrderNotFoundException.class)
+                .hasMessage("Order not found");
     }
 
     private void authenticate_user_with_role(User.Roles role)
