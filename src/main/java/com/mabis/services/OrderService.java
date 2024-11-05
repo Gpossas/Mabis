@@ -65,6 +65,15 @@ public class OrderService
        return order.getStatus();
     }
 
+    public ModifyOrderQuantityResponseDTO modify_order_quantity(ModifyOrderQuantityRequestDTO dto)
+    {
+        Order order = order_repository.findById(dto.order_id()).orElseThrow(OrderNotFoundException::new);
+        order.setQuantity(dto.quantity());
+        order.setPrice(order.getPrice() * dto.quantity());
+        order = order_repository.save(order);
+        return new ModifyOrderQuantityResponseDTO(order.getId(), order.getQuantity(), order.getPrice());
+    }
+
     private void verify_table_status_active(RestaurantTable table)
     {
         if (!table.getStatus().equals(RestaurantTable.table_status.ACTIVE.getStatus()))
