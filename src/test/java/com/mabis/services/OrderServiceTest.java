@@ -9,6 +9,7 @@ import com.mabis.domain.restaurant_table.RestaurantTable;
 import com.mabis.domain.user.User;
 import com.mabis.domain.user.UserDetailsImpl;
 import com.mabis.exceptions.NotActiveTableException;
+import com.mabis.exceptions.OrderNotFoundException;
 import com.mabis.exceptions.TableNotFoundException;
 import com.mabis.exceptions.TableTokenNotMatchException;
 import com.mabis.repositories.OrderRepository;
@@ -80,9 +81,9 @@ class OrderServiceTest
     @Test
     void test_delete_non_existent_order_throw_exception()
     {
-        assertThatThrownBy(() -> order_service.delete_order())
-                .isInstanceOf(NotActiveTableException.class)
-                .hasMessage("Table is not active");
+        assertThatThrownBy(() -> order_service.delete_order(UUID.randomUUID()))
+                .isInstanceOf(OrderNotFoundException.class)
+                .hasMessage("Order not found");
     }
 
     @Test
