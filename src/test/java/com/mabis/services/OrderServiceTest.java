@@ -2,10 +2,7 @@ package com.mabis.services;
 
 import com.mabis.domain.attachment.Attachment;
 import com.mabis.domain.menu_item.MenuItem;
-import com.mabis.domain.order.Order;
-import com.mabis.domain.order.OrderItemDTO;
-import com.mabis.domain.order.OrderRequestDTO;
-import com.mabis.domain.order.UpdateStatusOrderRequestDTO;
+import com.mabis.domain.order.*;
 import com.mabis.domain.restaurant_table.RestaurantTable;
 import com.mabis.domain.user.User;
 import com.mabis.domain.user.UserDetailsImpl;
@@ -187,6 +184,23 @@ class OrderServiceTest
         assertThatThrownBy(() -> order_service.update_status_order(Mockito.mock(UpdateStatusOrderRequestDTO.class)))
                 .isInstanceOf(OrderNotFoundException.class)
                 .hasMessage("Order not found");
+    }
+
+    @Test
+    void test_successful_modify_order_quantity()
+    {
+        ModifyOrderQuantityRequestDTO dto = new ModifyOrderQuantityRequestDTO(UUID.randomUUID(), 3);
+        Order order_mock = Mockito.spy(new Order());
+        Float price = 8.32F;
+        order_mock.setPrice(price);
+        order_mock.setId(dto.order_id());
+
+        Mockito.when(order_repository.findById(dto.order_id())).thenReturn(Optional.of(order_mock));
+        Mockito.when(order_repository.save(order_mock)).thenReturn(order_mock);
+
+        order_service.modify_order_quantity(dto);
+        Mockito.verify(order_mock).setQuantity(dto.quantity());
+        Mockito.verify(order_mock).setPrice(price * dto.quantity());
     }
 
     private void authenticate_user_with_role(User.Roles role)
