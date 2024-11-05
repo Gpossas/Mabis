@@ -166,6 +166,19 @@ class OrderServiceTest
                 .hasMessage("Order not found");
     }
 
+    @Test
+    void test_successful_update_status_order()
+    {
+        UpdateStatusOrderRequestDTO dto = new UpdateStatusOrderRequestDTO(UUID.randomUUID(),
+                Order.OrderStatus.PREPARING.getStatus());
+        Order order_mock = Mockito.mock(Order.class);
+
+        Mockito.when(order_repository.findById(dto.order_id())).thenReturn(Optional.ofNullable(order_mock));
+
+        order_service.update_status_order(dto);
+        Mockito.verify(order_mock).setStatus(Order.OrderStatus.PREPARING);
+    }
+
     private void authenticate_user_with_role(User.Roles role)
     {
         User user = new User();
