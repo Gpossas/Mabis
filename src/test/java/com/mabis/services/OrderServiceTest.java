@@ -1,6 +1,9 @@
 package com.mabis.services;
 
 import com.mabis.domain.attachment.Attachment;
+import com.mabis.domain.menu_item.MenuItem;
+import com.mabis.domain.order.Order;
+import com.mabis.domain.order.OrderItemDTO;
 import com.mabis.domain.order.OrderRequestDTO;
 import com.mabis.domain.restaurant_table.RestaurantTable;
 import com.mabis.domain.user.User;
@@ -11,9 +14,7 @@ import com.mabis.exceptions.TableTokenNotMatchException;
 import com.mabis.repositories.OrderRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,10 +22,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 class OrderServiceTest
@@ -40,6 +43,9 @@ class OrderServiceTest
 
     @InjectMocks
     OrderService order_service;
+
+    @Captor
+    ArgumentCaptor<List<Order>> orders_captor;
 
     @Test
     void test_place_order_non_existent_table_throw_exception()
@@ -114,7 +120,33 @@ class OrderServiceTest
     }
 
     @Test
-    void test_successful_place_order(){}
+    void test_successful_place_order()
+    {
+        RestaurantTable table = new RestaurantTable();
+        table.setNumber(98);
+        table.setStatus("active");
+        table.setQr_code(new Attachment("token", "url"));
+        MenuItem menu_item1 = new MenuItem();
+        MenuItem menu_item2 = new MenuItem();
+        menu_item1.setId(UUID.randomUUID());
+        menu_item2.setId(UUID.randomUUID());
+        OrderRequestDTO dto = new OrderRequestDTO(UUID.randomUUID(), "token", new ArrayList<>(List.of(
+                new OrderItemDTO(menu_item1.getId(),1, ""),
+                new OrderItemDTO(menu_item2.getId(),1, ""),
+                new OrderItemDTO(UUID.randomUUID(),1, ""))
+        ));
+        HashSet<MenuItem> menu_items_found = new HashSet<>();
+        menu_items_found.add(menu_item1);
+        menu_items_found.add(menu_item2);
+
+        Mockito.when(table_service.get_table_by_id(dto.table_id())).thenReturn(table);
+        Mockito.when(menu_item_service.find_id_in(Mockito.any())).thenReturn(menu_items_found);
+
+        order_service.place_order(dto);
+
+        Mockito.verify(order_repository).saveAll(orders_captor.capture());
+        assertEquals(2, orders_captor.getValue().size());
+    }
 
     @Test
     void test_successful_delete_order(){}
