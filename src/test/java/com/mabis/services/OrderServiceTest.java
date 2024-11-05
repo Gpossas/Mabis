@@ -181,6 +181,14 @@ class OrderServiceTest
         Mockito.verify(order_mock).setStatus_updated_at(LocalDateTime.now());
     }
 
+    @Test
+    void test_throw_exception_order_not_found_when_modifying_quantity_non_existent_order()
+    {
+        assertThatThrownBy(() -> order_service.update_status_order(Mockito.mock(UpdateStatusOrderRequestDTO.class)))
+                .isInstanceOf(OrderNotFoundException.class)
+                .hasMessage("Order not found");
+    }
+
     private void authenticate_user_with_role(User.Roles role)
     {
         User user = new User();
