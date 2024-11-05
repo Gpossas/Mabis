@@ -1,10 +1,7 @@
 package com.mabis.services;
 
 import com.mabis.domain.menu_item.MenuItem;
-import com.mabis.domain.order.Order;
-import com.mabis.domain.order.OrderClientResponseDTO;
-import com.mabis.domain.order.OrderItemDTO;
-import com.mabis.domain.order.OrderRequestDTO;
+import com.mabis.domain.order.*;
 import com.mabis.domain.restaurant_table.RestaurantTable;
 import com.mabis.exceptions.NotActiveTableException;
 import com.mabis.exceptions.OrderNotFoundException;
@@ -56,6 +53,14 @@ public class OrderService
     {
         order_repository.findById(id).orElseThrow(OrderNotFoundException::new);
         order_repository.deleteById(id);
+    }
+
+    public Order.OrderStatus update_status_order(UpdateStatusOrderRequestDTO dto)
+    {
+       Order order = order_repository.findById(dto.order_id()).orElseThrow(OrderNotFoundException::new);
+       order.setStatus(Order.OrderStatus.valueOf(dto.order_status()));
+       order_repository.save(order);
+       return order.getStatus();
     }
 
     private void verify_table_status_active(RestaurantTable table)
