@@ -90,6 +90,7 @@ class OrderServiceTest
         table.setStatus("active");
         table.setQr_code(new Attachment("token", "urll"));
         OrderRequestDTO dto = new OrderRequestDTO(UUID.randomUUID(), "wrong-token", null);
+        authenticate_user_with_role(User.Roles.COOK); // this user role is not allowed to place orders
 
         Mockito.when(table_service.get_table_by_id(dto.table_id())).thenReturn(table);
 
@@ -175,7 +176,7 @@ class OrderServiceTest
 
         order_service.update_status_order(dto);
         Mockito.verify(order_mock).setStatus(Order.OrderStatus.PREPARING);
-        Mockito.verify(order_mock).setStatus_updated_at(LocalDateTime.now());
+        Mockito.verify(order_mock).setStatus_updated_at(Mockito.any(LocalDateTime.class));
     }
 
     @Test
