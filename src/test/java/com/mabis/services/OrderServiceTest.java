@@ -201,7 +201,6 @@ class OrderServiceTest
 
         order_service.modify_order_quantity(dto);
         Mockito.verify(order_mock).setQuantity(dto.quantity());
-        Mockito.verify(order_mock).setPrice(price * dto.quantity());
     }
 
     private void authenticate_user_with_role(User.Roles role)

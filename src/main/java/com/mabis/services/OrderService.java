@@ -69,7 +69,6 @@ public class OrderService
     {
         Order order = order_repository.findById(dto.order_id()).orElseThrow(OrderNotFoundException::new);
         order.setQuantity(dto.quantity());
-        order.setPrice(order.getPrice() * dto.quantity());
         order = order_repository.save(order);
         return new ModifyOrderQuantityResponseDTO(order.getId(), order.getQuantity(), order.getPrice());
     }

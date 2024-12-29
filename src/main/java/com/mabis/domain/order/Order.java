@@ -44,13 +44,14 @@ public class Order
     @Column
     private String description;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private OrderStatus status = OrderStatus.PENDING;
 
-    @Column()
+    @Column(name = "updated_at")
     private LocalDateTime status_updated_at;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "created_at")
     private LocalDateTime order_placed_at = LocalDateTime.now();
 
     @ManyToOne(targetEntity = RestaurantTable.class)
