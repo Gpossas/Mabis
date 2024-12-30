@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 @Service
-@RequiredArgsConstructor
 public class JWTService
 {
     @Value("${api.jwt.secret}")
