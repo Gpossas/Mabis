@@ -22,3 +22,6 @@
 ## Setup
 - Update application.properties with your database and S3 credentials.
 - Create JWT_SECRET env variable
+
+## 
+This project was made with the intention of learn the spring boot framework. It is not production ready.
